@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen — a Boundless learning studio</title>
+<meta name="description" content="Lumen: bite-size, binge-worthy lessons on the chakra system, color, meridians, plant energetics, and the night sky. Streaks, XP, and a quiz arena.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%230a0d18'/><text x='50' y='66' font-size='46' text-anchor='middle'>◐</text></svg>">
+<meta name="theme-color" content="#0a0d18">
+<style>
+:root{
+  --bg:#0a0d18; --ink:#e9ecf5; --dim:#9aa3b8; --faint:#5b6478;
+  --a1:#2dd4bf; --a2:#8b5cf6; --a3:#f472b6;
+  --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.1);
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;font-size:16.5px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:Fraunces,serif;font-weight:600;line-height:1.15;margin:0}
+button{font-family:inherit;cursor:pointer}
+::selection{background:rgba(139,92,246,.4)}
+
+/* ---- ambient aurora ---- */
+.blob{position:fixed;border-radius:50%;filter:blur(110px);opacity:.32;z-index:0;pointer-events:none;animation:blobdrift 26s ease-in-out infinite alternate}
+#b1{width:44vw;height:44vw;background:var(--a1);top:-14vw;left:-10vw}
+#b2{width:38vw;height:38vw;background:var(--a2);top:24vh;right:-12vw;animation-delay:-9s}
+#b3{width:30vw;height:30vw;background:var(--a3);bottom:-12vw;left:22vw;animation-delay:-17s;opacity:.2}
+@keyframes blobdrift{from{transform:translate(0,0) scale(1)}to{transform:translate(6vw,4vh) scale(1.12)}}
+#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;background-image:radial-gradient(rgba(255,255,255,.7) .6px,transparent .6px);background-size:3px 3px}
+
+/* ---- shell ---- */
+#app{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:18px 20px 90px}
+header{display:flex;align-items:center;gap:12px;padding:6px 0 22px}
+#logo{font-family:Fraunces,serif;font-size:24px;font-weight:700;letter-spacing:.5px;cursor:pointer;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.spacer{flex:1}
+.chip{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;backdrop-filter:blur(10px);white-space:nowrap}
+.chip b{color:var(--ink)}
+.chip .sub{color:var(--dim);font-weight:500}
+#sndBtn{background:var(--card);border:1px solid var(--line);border-radius:999px;width:38px;height:38px;color:var(--dim);font-size:16px;transition:.2s}
+#sndBtn:hover{color:var(--ink);border-color:rgba(255,255,255,.25)}
+
+.view{display:none;animation:fadeup .45s ease}
+.view.on{display:block}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---- cards & buttons ---- */
+.glass{background:var(--card);border:1px solid var(--line);border-radius:var(--r);backdrop-filter:blur(14px);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.glass.hover:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.22);box-shadow:0 18px 40px -18px rgba(0,0,0,.7)}
+.btn{border:none;border-radius:14px;padding:13px 24px;font-size:15.5px;font-weight:600;color:#0a0d18;background:linear-gradient(92deg,var(--a1),var(--a2));box-shadow:0 8px 26px -8px rgba(139,92,246,.55);transition:transform .18s,box-shadow .18s,filter .18s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1);box-shadow:0 14px 34px -8px rgba(139,92,246,.7)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.ghost:hover{border-color:rgba(255,255,255,.3)}
+.btn.big{padding:16px 30px;font-size:17px;border-radius:16px}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+
+/* ---- home ---- */
+.hero{padding:30px 30px 26px;margin-bottom:22px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(45,212,191,.12),rgba(139,92,246,.12) 55%,rgba(244,114,182,.1));pointer-events:none}
+.hero h1{font-size:clamp(28px,4.6vw,42px);margin:10px 0 8px}
+.hero p{color:var(--dim);max-width:56ch;margin:0 0 20px}
+.heroRow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.pathcard{padding:22px;cursor:pointer;position:relative}
+.pathcard .pemoji{font-size:30px}
+.pathcard h3{font-size:20px;margin:10px 0 6px}
+.pathcard p{color:var(--dim);font-size:14.5px;margin:0 0 16px;min-height:3em}
+.meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--dim)}
+.ring{--p:0;width:44px;height:44px;border-radius:50%;background:conic-gradient(var(--rc,var(--a1)) calc(var(--p)*1%),rgba(255,255,255,.08) 0);display:grid;place-items:center;flex:none}
+.ring i{width:34px;height:34px;border-radius:50%;background:#131728;display:grid;place-items:center;font-style:normal;font-size:11.5px;font-weight:700}
+.rowcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px}
+.featurecard{padding:22px;cursor:pointer}
+.featurecard h3{font-size:19px;margin:8px 0 4px}
+.featurecard p{color:var(--dim);font-size:14.5px;margin:0}
+.sectionTitle{font-size:22px;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+.sectionTitle:after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---- path view ---- */
+.back{background:none;border:none;color:var(--dim);font-size:15px;font-weight:600;padding:0;margin-bottom:18px;display:inline-flex;align-items:center;gap:6px}
+.back:hover{color:var(--ink)}
+.pathhead{display:flex;gap:18px;align-items:center;margin-bottom:22px;flex-wrap:wrap}
+.pathhead .pemoji{font-size:44px}
+.pathhead h2{font-size:clamp(24px,4vw,34px)}
+.pathhead p{color:var(--dim);margin:4px 0 0;max-width:60ch}
+.lessonrow{display:flex;align-items:center;gap:16px;padding:18px 20px;margin-bottom:12px;cursor:pointer}
+.lessonrow .num{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:15px;flex:none}
+.lessonrow.done .num{background:linear-gradient(135deg,var(--a1),var(--a2));color:#0a0d18;border:none}
+.lessonrow h4{font-size:17px;font-weight:600;font-family:Inter}
+.lessonrow .lmeta{font-size:13px;color:var(--dim);margin-top:2px}
+.lessonrow .go{margin-left:auto;color:var(--faint);font-size:20px;transition:.2s}
+.lessonrow:hover .go{color:var(--ink);transform:translateX(4px)}
+.nextpill{font-size:11.5px;font-weight:700;letter-spacing:.6px;color:#0a0d18;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:999px;padding:3px 10px;margin-left:8px;text-transform:uppercase}
+
+/* ---- lesson view ---- */
+.lessonwrap{max-width:720px;margin:0 auto}
+.progressbar{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 26px}
+.progressbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:99px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.seccard{padding:30px;margin-bottom:16px}
+.seccard h3{font-size:clamp(21px,3.4vw,27px);margin-bottom:12px}
+.seccard p{color:#c9d0e0;margin:0;font-size:16.5px}
+.secfoot{display:flex;gap:10px;margin-top:22px;align-items:center}
+.listen{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--dim);border-radius:999px;padding:9px 16px;font-size:13.5px;font-weight:600;transition:.2s}
+.listen:hover{color:var(--ink);border-color:rgba(255,255,255,.3)}
+.qopt{display:block;width:100%;text-align:left;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;color:var(--ink);padding:15px 18px;font-size:15.5px;font-weight:500;margin-bottom:10px;transition:.18s}
+.qopt:hover{border-color:rgba(255,255,255,.3);transform:translateX(4px)}
+.qopt.right{background:rgba(45,212,191,.16);border-color:var(--a1)}
+.qopt.wrong{background:rgba(244,114,182,.12);border-color:var(--a3);opacity:.7}
+.qfeed{min-height:26px;font-weight:600;font-size:14.5px;margin:4px 0 6px}
+
+/* ---- completion overlay ---- */
+#done{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(6,8,16,.75);backdrop-filter:blur(6px)}
+#done.on{display:grid}
+#doneCard{max-width:440px;width:92vw;padding:36px 32px;text-align:center;animation:fadeup .4s ease}
+#doneCard .big{font-size:52px}
+#doneCard h2{font-size:26px;margin:10px 0 6px}
+#doneCard p{color:var(--dim);margin:0 0 8px}
+#doneXp{font-family:Fraunces,serif;font-size:34px;font-weight:700;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0 18px}
+#nextTease{font-size:14px;color:var(--dim);margin:14px 0 6px}
+#nextTease b{color:var(--ink)}
+
+/* ---- arena ---- */
+.arenatop{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.combo{font-family:Fraunces,serif;font-weight:700;font-size:20px;background:linear-gradient(90deg,var(--a2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.combo.hot{animation:pulse .5s ease}
+@keyframes pulse{40%{transform:scale(1.25)}}
+.arenaq{padding:28px;margin-bottom:16px}
+.arenaq h3{font-size:clamp(19px,3vw,24px);font-family:Inter;font-weight:600}
+
+/* ---- studio ---- */
+.breathwrap{display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+#bcircle{width:min(56vw,240px);height:min(56vw,240px);border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,.35),rgba(139,92,246,.22) 60%,transparent 72%);border:1px solid rgba(255,255,255,.18);display:grid;place-items:center;font-family:Fraunces,serif;font-size:21px;transition:transform var(--dur,4s) cubic-bezier(.45,0,.55,1)}
+#bcircle.in{transform:scale(1.45)}
+#bcircle.hold{transform:scale(1.45)}
+#bcircle.out{transform:scale(1)}
+.studioopts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;width:100%}
+
+footer{margin-top:60px;text-align:center;color:var(--faint);font-size:13px}
+footer a{color:var(--dim)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div>
+<div id="grain"></div>
+<div id="app">
+  <header>
+    <div id="logo">Lumen</div>
+    <div class="spacer"></div>
+    <div class="chip" id="streakChip">🔥 <b>0</b><span class="sub">day streak</span></div>
+    <div class="chip" id="xpChip">✦ <b>0</b><span class="sub">Spark</span></div>
+    <button id="sndBtn" title="Sound">🔊</button>
+  </header>
+
+  <div class="view on" id="v-home"></div>
+  <div class="view" id="v-path"></div>
+  <div class="view" id="v-lesson"></div>
+  <div class="view" id="v-arena"></div>
+  <div class="view" id="v-studio"></div>
+  <div class="view" id="v-library"></div>
+
+  <footer>Lumen · a Boundless learning studio · <span id="vtag">v1.0</span><br>
+  Explores traditional systems (chakras, meridians, plant energetics) alongside modern science — offered for reflection and learning, not as medical advice.</footer>
+</div>
+
+<div id="done"><div id="doneCard" class="glass">
+  <div class="big" id="doneEmoji">✦</div>
+  <h2 id="doneTitle">Lesson complete</h2>
+  <p id="doneSub"></p>
+  <div id="doneXp">+0 XP</div>
+  <div id="nextTease"></div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="btn big" id="doneNext">Keep going →</button>
+    <button class="btn ghost" id="doneHome">Home</button>
+  </div>
+</div></div>
+
+<script>
+/* ============ LUMEN — adult learning engine (shared with The 89) ============ */
+/* DATA_START */
+const SITE={
+  key:'lumen.v1', name:'Lumen', vtag:'v1.0',
+  heroKicker:'Tonight\u2019s session awaits',
+  heroTitle:'Small lessons. Big glow.',
+  heroSub:'Five-minute lessons on the chakra system, the language of color, meridians, plant energetics, and the night sky — with streaks, XP, and a quiz arena that\u2019s hard to put down.',
+  levels:[[0,'Spark'],[120,'Ember'],[300,'Glow'],[600,'Radiant'],[1000,'Luminous'],[1600,'Aurora'],[2400,'Boundless']],
+  arenaName:'The Arena', arenaDesc:'Ten rapid questions. Build a combo, multiply your XP.',
+  studioName:'The Studio', studioDesc:'Guided breathwork sessions to reset between lessons.'
+};
+const PATHS=[
+{emoji:'🧘', color:'#f472b6', title:'The Chakra System',
+ blurb:'The seven-center energy map of yogic tradition — history, anatomy of the subtle body, and practice.',
+ lessons:[
+ {t:'The Energy Map', mins:4, secs:[
+   {h:'Wheels of light',t:'"Chakra" is Sanskrit for wheel. In yogic tradition, chakras are spinning centers of subtle energy — prana — arranged along the spine from its base to the crown of the head. The classical system most people know today names seven, each associated with a color, a region of the body, and a domain of human experience, from survival at the root to transcendence at the crown.'},
+   {h:'Where the idea comes from',t:'Chakras appear in early Hindu texts — the Vedas and Upanishads — and were elaborated in later tantric traditions between roughly the 8th and 12th centuries. Different lineages counted different numbers of centers; the seven-chakra model with rainbow colors is largely a modern synthesis, popularized in the West in the 20th century. Knowing that history makes you a sharper student, not a lesser one.'},
+   {h:'How to hold it',t:'You can approach the chakra system as literal energy anatomy, as a psychological map of human needs — safety, pleasure, will, love, voice, insight, unity — or as both. Lumen presents the tradition faithfully and flags where modern science does and doesn\u2019t follow. Use it as a mirror for self-reflection; it isn\u2019t a medical system.'}],
+  quiz:[
+   {q:'What does the Sanskrit word "chakra" mean?',a:'Wheel',w:['Light','Breath']},
+   {q:'The familiar seven-chakra rainbow model is…',a:'A modern synthesis of older traditions',w:['Unchanged since the Vedas','A medieval European invention']},
+   {q:'Lumen suggests treating the chakra map as…',a:'A reflective map of human experience',w:['A replacement for medical care','A strict anatomical chart']}]},
+ {t:'The Lower Triad', mins:5, secs:[
+   {h:'Root — Muladhara',t:'At the base of the spine sits Muladhara, the root chakra — red, element earth. Its domain is survival: safety, shelter, belonging, the felt sense that the ground will hold you. Tradition says an unsettled root shows up as anxiety, restlessness, or scarcity thinking; a steady root feels like calm confidence. Grounding practices — walking barefoot, slow exhales, strength work — speak its language.'},
+   {h:'Sacral — Svadhisthana',t:'Below the navel is Svadhisthana — orange, element water. This is the center of pleasure, emotion, sensuality, and creative flow. Its name means "one\u2019s own dwelling." Blocked, tradition describes numbness or guilt around joy; flowing, it brings ease with feeling and making. Dance, warm baths, and creative play without a goal are classic sacral practices.'},
+   {h:'Solar Plexus — Manipura',t:'At the upper belly burns Manipura, the "city of jewels" — yellow, element fire. This is will, confidence, digestion of both food and experience. An overactive fire turns domineering; a weak one struggles to say no. Practices that build healthy fire include core work, decisive small commitments kept, and breath of fire (kapalabhati) in yogic practice.'}],
+  quiz:[
+   {q:'Muladhara, the root chakra, governs…',a:'Safety and grounding',w:['Speech and expression','Dreams and intuition']},
+   {q:'Which element is paired with the sacral chakra?',a:'Water',w:['Fire','Air']},
+   {q:'Manipura translates roughly to…',a:'City of jewels',w:['River of light','Silent crown']}]},
+ {t:'Heart & Voice', mins:5, secs:[
+   {h:'Heart — Anahata',t:'Anahata, the heart chakra — green, element air — means "unstruck," as in a sound not made by two things colliding. It is the bridge between the body-focused lower centers and the mind-focused upper ones. Its domain: love, compassion, grief, forgiveness. Tradition reads a guarded heart as isolation or bitterness, an open one as warmth without losing self. Gratitude practice and chest-opening breath are its tools.'},
+   {h:'Throat — Vishuddha',t:'Vishuddha at the throat — blue, element ether — is purification through expression: speaking truth, singing, writing, and equally, listening. Swallowed words are said to tighten it; honest, kind speech clears it. A practical test: is there something true you\u2019ve been carrying that needs saying, gently?'},
+   {h:'Working the middle channels',t:'Heart and throat practice pair beautifully: journal what you feel (heart), then say one true sentence aloud to someone who matters (throat). Humming and chanting — even a skeptical hum in the shower — vibrates the throat region and reliably downshifts the nervous system via the vagus nerve, a place where tradition and physiology happily agree.'}],
+  quiz:[
+   {q:'"Anahata" means…',a:'Unstruck',w:['Burning','Hidden']},
+   {q:'The throat chakra\u2019s domain includes…',a:'Truthful expression and listening',w:['Digestion','Balance and gait']},
+   {q:'Humming calms the body partly by stimulating…',a:'The vagus nerve',w:['The optic nerve','The Achilles tendon']}]},
+ {t:'The Upper Lights', mins:5, secs:[
+   {h:'Third eye — Ajna',t:'Between the brows sits Ajna — indigo — the command center of insight, imagination, and discernment. Tradition places inner vision here: the capacity to see patterns, not just objects. Overactive, it drifts into fantasy and overthinking; clear, it is quiet knowing. Practices: candle gazing (trataka), visualization, and simply staring at nothing out a window — undervalued and ancient.'},
+   {h:'Crown — Sahasrara',t:'At and above the crown blooms Sahasrara, the thousand-petaled lotus — violet or white. Its domain is unity: the dissolving of the border between self and everything else, touched in deep meditation, awe, prayer, or standing under a truly dark night sky. Tradition treats it less as a center to activate and more as a door that opens when the others are in order.'},
+   {h:'A 5-minute integration',t:'Try a bottom-to-top scan: breathe into the base of the spine (safety), the low belly (feeling), the upper belly (will), the chest (love), the throat (truth), the brow (insight), the crown (space). One slow breath each. Seven breaths, one map — a complete review of this path you can run anywhere, anytime.'}],
+  quiz:[
+   {q:'Sahasrara is depicted as a lotus with…',a:'A thousand petals',w:['Seven petals','No petals']},
+   {q:'Ajna is associated with…',a:'Insight and discernment',w:['Appetite','Muscular strength']},
+   {q:'The 7-breath scan moves…',a:'From the base of the spine to the crown',w:['From the hands inward','From the crown downward']}]}
+]},
+{emoji:'🎨', color:'#fbbf24', title:'The Language of Color',
+ blurb:'Why color moves us — perception, psychology, culture, and how to use color deliberately.',
+ lessons:[
+ {t:'Why Color Moves Us', mins:4, secs:[
+   {h:'Light becomes feeling',t:'Color begins as wavelengths of light striking three types of cone cells in your retina. But it ends as feeling: within milliseconds, color signals reach brain regions tied to emotion and arousal before conscious thought finishes loading. That\u2019s why a room, a brand, or a sunset can change your state before you can explain why.'},
+   {h:'Arousal and calm',t:'Broadly, long-wavelength colors — reds, oranges — nudge the nervous system toward arousal: elevated attention, appetite, urgency. Short-wavelength colors — blues, greens — nudge toward calm and focus. The effects are real but modest and heavily shaped by context, brightness, and saturation: a neon green is not a forest green.'},
+   {h:'Culture writes the dictionary',t:'Biology sets tendencies; culture writes meanings. White signifies weddings in one tradition and mourning in another. Red is luck in China, danger on a Western road sign, and sanctity in Ethiopian iconography. Whenever you read a claim like "yellow means happiness," append silently: "…in this culture, in this context." That habit alone puts you ahead of most color guides.'}],
+  quiz:[
+   {q:'Human color vision relies on how many types of cone cells?',a:'Three',w:['One','Seven']},
+   {q:'Long-wavelength colors like red tend to…',a:'Raise arousal and attention',w:['Induce deep sleep','Have no measurable effect']},
+   {q:'Color meanings across cultures are…',a:'Learned and variable',w:['Identical worldwide','Fixed at birth']}]},
+ {t:'The Warm Spectrum', mins:4, secs:[
+   {h:'Red',t:'Red is the loudest color the eye knows — the first many languages name after black and white. It reads as energy, urgency, appetite, and passion; restaurants and sale signs exploit it shamelessly. In chakra language it belongs to the root: survival-level attention. Use it in small, deliberate doses — an accent wall, not a bedroom.'},
+   {h:'Orange',t:'Orange blends red\u2019s energy with yellow\u2019s brightness: sociable, playful, informal, affordable. It\u2019s the color of enthusiasm without red\u2019s alarm — which is why safety gear and calls-to-action love it. Its shadow is cheapness when overused; its gift is warmth that invites participation.'},
+   {h:'Yellow',t:'Yellow owns attention: the most visible color at distance, hence taxis and warning signs. Psychologically it leans optimistic, quick, mentally stimulating — and fatiguing in excess; fully saturated yellow rooms are famously hard to live in. Softened toward gold or butter, it becomes sunlight you can keep indoors.'}],
+  quiz:[
+   {q:'A classic effect attributed to red is…',a:'Stimulating appetite and urgency',w:['Instantly lowering heart rate','Improving night vision']},
+   {q:'Orange commonly communicates…',a:'Sociable, playful enthusiasm',w:['Cold formality','Deep mourning']},
+   {q:'Yellow is used for warning signs because…',a:'It\u2019s highly visible at distance',w:['It\u2019s the cheapest ink','No one likes it']}]},
+ {t:'The Cool Spectrum', mins:4, secs:[
+   {h:'Green',t:'Green sits at the center of the visible spectrum, where the eye discriminates most finely — we are tuned to leaves. It signals growth, balance, safety, and permission (literally, at intersections). Exposure to green space measurably lowers stress markers; even pictures of nature help. In the chakra map it is the heart\u2019s color: the balancing middle.'},
+   {h:'Blue',t:'Blue is the world\u2019s most-cited favorite color — the shade of sky and deep water, of trust, competence, and calm. Corporations wear it for credibility; bedrooms wear it for sleep. One caution from research: blue-rich light at night suppresses melatonin, so the calming color on your wall is the alerting light on your screen.'},
+   {h:'Purple & the in-betweens',t:'Purple was once the costliest dye on earth — thousands of sea snails per robe — so it still whispers royalty, luxury, mystery, and spirit. Pink, red softened with white, reads as tenderness and sweetness; deep teal reads as considered creativity. The in-between colors are where personal palettes get interesting.'}],
+  quiz:[
+   {q:'The human eye discriminates most finely around…',a:'Green wavelengths',w:['Deep red','Ultraviolet']},
+   {q:'Blue-rich screen light at night…',a:'Suppresses melatonin',w:['Boosts melatonin','Cannot affect sleep']},
+   {q:'Purple\u2019s association with royalty comes from…',a:'The historic cost of purple dye',w:['A 1990s ad campaign','Its visibility at sea']}]},
+ {t:'Color in Practice', mins:5, secs:[
+   {h:'Rooms and wardrobes',t:'Match color to the job of the space: cool, muted tones where you want calm focus (bedroom, study), warmer accents where you want appetite and conversation (kitchen, dining). In clothing, color speaks before you do — blue for trust-heavy meetings, warm tones for social warmth. None of this is destiny; all of it is a nudge you may as well aim.'},
+   {h:'The chakra crossover',t:'Notice the elegant overlap: the chakra rainbow climbs from red (body, urgency) to violet (spirit, subtlety) exactly as color psychology climbs from arousal to contemplation. Whether you read that as ancient insight or happy coincidence, it makes the two systems easy to remember together — one ladder, two languages.'},
+   {h:'Build your palette',t:'Exercise: choose one color you want more of in your life and name why in one sentence ("more green — I want steadiness"). Add it somewhere you\u2019ll see daily: a mug, a phone wallpaper, a plant. Small, visible, repeated — that\u2019s how color actually works on a life.'}],
+  quiz:[
+   {q:'For a room meant for calm focus, favor…',a:'Cool, muted tones',w:['Saturated red','Flashing neon']},
+   {q:'The chakra ladder and color psychology both run…',a:'From arousal (red) toward contemplation (violet)',w:['From violet to red','In no particular order']},
+   {q:'The palette exercise works through…',a:'Small, visible, daily repetition',w:['One-time exposure','Avoiding the color entirely']}]}
+]},
+{emoji:'🌊', color:'#38bdf8', title:'Meridians & Energy',
+ blurb:'The twelve rivers of Chinese medicine — qi, the organ clock, acupressure, and honest discernment.',
+ lessons:[
+ {t:'Rivers of Qi', mins:4, secs:[
+   {h:'The water metaphor',t:'Classical Chinese medicine imagines the body as a landscape crossed by rivers — the jingluo, or meridians — carrying qi, vital energy. Health is good flow; illness is drought, flood, or blockage. Where the chakra map is a ladder of centers, the meridian map is a watershed: twelve primary channels irrigating every region of the body.'},
+   {h:'Yin, yang, and pairing',t:'The twelve channels come in yin-yang pairs, each linked to an organ system: Lung pairs with Large Intestine, Heart with Small Intestine, Kidney with Bladder, and so on. Yin channels run along the softer, inner surfaces of the body; yang channels along the outer, sun-facing surfaces — an anatomy you can trace with a fingertip.'},
+   {h:'The organ clock',t:'Tradition adds a rhythm: qi is said to peak in each channel for two hours daily — Lung 3–5am, Stomach 7–9am, Heart 11am–1pm, Kidney 5–7pm. Whatever its mechanism, the clock encodes real circadian wisdom: eat when digestion is strong, wind down as evening organs take the shift. Chronobiology, in older clothes.'}],
+  quiz:[
+   {q:'"Jingluo" refers to…',a:'The meridian channel network',w:['A breathing technique','A type of tea']},
+   {q:'The twelve primary meridians are organized as…',a:'Yin-yang organ pairs',w:['Seven rainbow centers','Random lines']},
+   {q:'In the organ clock, each channel\u2019s qi peaks for…',a:'Two hours daily',w:['One week','Only at midnight']}]},
+ {t:'The Twelve Channels', mins:5, secs:[
+   {h:'The arm channels',t:'Six channels travel the arms. Yin, on the inner arm: Lung (grief and breath, thumb-side), Heart (joy and spirit, pinky-side), and Pericardium (the heart\u2019s protector, center line). Yang, on the outer arm: Large Intestine, Small Intestine, and the intriguingly named Triple Burner — less an organ than a description of the body\u2019s three heating zones.'},
+   {h:'The leg channels',t:'Six more travel the legs and torso. Yin, inner leg: Spleen (nourishment and thought), Liver (planning and smooth flow of emotion), Kidney (deep reserves, will, and — echoing the root chakra — foundational vitality). Yang, outer leg and back: Stomach, Gallbladder (decisiveness, in the tradition), and Bladder, whose channel runs the whole length of the back.'},
+   {h:'Organs as personalities',t:'Notice that each organ carries an emotional portfolio: Lung/grief, Liver/anger, Kidney/fear, Heart/joy, Spleen/worry. Modern medicine wouldn\u2019t put it that way — yet everyone knows grief that sits in the chest and fear that hits the low back and gut. The meridian map is, among other things, a very old atlas of where feelings live in the body.'}],
+  quiz:[
+   {q:'Yin arm channels include Lung, Heart, and…',a:'Pericardium',w:['Bladder','Gallbladder']},
+   {q:'Which channel runs the length of the back?',a:'Bladder',w:['Lung','Spleen']},
+   {q:'In the traditional map, the Liver is linked to…',a:'Anger and smooth emotional flow',w:['Hearing','Fingernail growth']}]},
+ {t:'Hands-On Energy', mins:5, secs:[
+   {h:'Three famous points',t:'Acupressure works these channels with fingertips. Three classics: LI4 (Hegu), in the webbing of thumb and index finger — the general-purpose point for tension and headaches, traditionally avoided in pregnancy. PC6 (Neiguan), three finger-widths up the inner wrist — the nausea point, used in motion-sickness bands. Yintang, between the eyebrows — the calm point, pressed lightly with slow breath.'},
+   {h:'How to press',t:'Use firm, comfortable pressure — an ache that feels good, never sharp pain — for 30 to 60 seconds while breathing slowly out longer than in. Circle gently. Whatever the mechanism, the combination of focused touch, slowed exhale, and attention is a reliable nervous-system downshift you can do in a meeting without anyone noticing.'},
+   {h:'A two-minute routine',t:'Try this sequence: Yintang, ten slow breaths. LI4 each hand, thirty seconds. Finish tracing down the inner forearm — the Pericardium line — three times per arm, like smoothing a river. Two minutes, no equipment, and you\u2019ve toured three channels. This is your Studio companion between lessons.'}],
+  quiz:[
+   {q:'PC6 (Neiguan) is best known for easing…',a:'Nausea',w:['Hiccups only','Sunburn']},
+   {q:'LI4 is located…',a:'In the thumb–index webbing',w:['Behind the knee','On the earlobe']},
+   {q:'Recommended acupressure pressure feels like…',a:'A comfortable ache, never sharp pain',w:['Numbness','As hard as possible']}]},
+ {t:'Energy with Discernment', mins:4, secs:[
+   {h:'What research finds',t:'Honest summary: acupuncture shows benefit beyond placebo for some conditions — chronic pain, nausea — in some studies, while point-specificity often fails tests: needling "wrong" points can work nearly as well. Meridians as physical structures haven\u2019t been found. Touch, ritual, expectation, and nervous-system regulation clearly do things; the classical map may be describing those effects in pre-scientific language.'},
+   {h:'Both/and thinking',t:'You don\u2019t have to choose between "ancient wisdom, fully literal" and "all nonsense." A map can be useful without being a photograph. The meridian system organizes body awareness, gives structure to self-care, and encodes circadian and emotional observations that hold up. Keep the practices that serve you; keep your epistemics too.'},
+   {h:'When to seek more',t:'Energy practices complement care; they don\u2019t replace it. New, severe, or persistent symptoms deserve a clinician. If you explore acupuncture, choose licensed practitioners. And notice Lumen\u2019s house style: tradition presented with respect, science presented without apology — the same both/and that runs through every path here.'}],
+  quiz:[
+   {q:'Studies of acupuncture often find that point-specificity…',a:'Matters less than expected',w:['Is perfectly confirmed','Was never tested']},
+   {q:'"A map can be useful without being a photograph" means…',a:'Frameworks can help even if not literally true',w:['All maps are false','Photographs are useless']},
+   {q:'Persistent or severe symptoms call for…',a:'A qualified clinician',w:['Only more acupressure','Ignoring them']}]}
+]},
+{emoji:'🌱', color:'#4ade80', title:'Plants: Sun & Earth',
+ blurb:'Above-ground and below-ground foods — energetics, nutrition science, and the forager\u2019s honest rules.',
+ lessons:[
+ {t:'Two Kingdoms of the Garden', mins:4, secs:[
+   {h:'Sun food, earth food',t:'Traditional food-energetics — from macrobiotics to folk wisdom — sorts plants by where they grow. Above-ground plants (leaves, fruits, flowering heads) drink light: they\u2019re framed as lightening, cooling, expansive. Below-ground plants (roots, tubers, bulbs) are held by soil: warming, grounding, consolidating. It\u2019s the adult version of a truth kids grasp instantly: an apple and a potato feel different to eat.'},
+   {h:'What chemistry says',t:'The frame maps surprisingly well onto nutrition. Above-ground parts run rich in water, vitamin C, and quick sugars — the plant\u2019s solar economy. Underground storage organs run dense in starches and minerals — the plant\u2019s savings account, built to survive winter. "Grounding" root vegetables literally are slow-burning, mineral-heavy energy storage.'},
+   {h:'Eating the whole ladder',t:'Neither kingdom is superior; a plate that spans both — bright leaves and fruits over dense roots and grains — covers the plant\u2019s whole strategy and most of yours. Seasonal instinct agrees: salads in July, roasted roots in January. Tradition calls it balancing energies; a dietitian calls it variety. Both are pleased with your soup.'}],
+  quiz:[
+   {q:'In food-energetics, root vegetables are framed as…',a:'Grounding and warming',w:['Cooling and expansive','Nutritionally empty']},
+   {q:'Underground storage organs tend to be rich in…',a:'Starches and minerals',w:['Vitamin C and water only','Caffeine']},
+   {q:'The recommended approach is to…',a:'Eat across both kingdoms',w:['Eat only roots','Eat only fruits']}]},
+ {t:'Root Wisdom', mins:4, secs:[
+   {h:'The savings accounts',t:'Carrots, beets, potatoes, sweet potatoes: taproots and tubers exist because the plant is banking energy for next year. That\u2019s why they\u2019re calorie-dense, shelf-stable, and civilization-shaping — potatoes alone rewrote the population history of Europe and the Andes fed empires on them. When you eat a root, you\u2019re eating a plan.'},
+   {h:'The pungent bulbs',t:'Onions and garlic are underground too, but they bank defense as much as energy: sulfur compounds that repel pests and, in us, give the sting, the tears, and a pharmacy of studied effects. Nearly every cuisine on earth starts its pots with them — the grounding base note of human cooking.'},
+   {h:'Peanuts and other surprises',t:'The peanut is a below-grounder in disguise: it flowers above, then drives its stem into the soil to fruit underground — a legume performing as a root. Ginger and turmeric are rhizomes, underground stems. The lesson of the underground kingdom: what looks humble is usually the most engineered part of the plant.'}],
+  quiz:[
+   {q:'Root vegetables are calorie-dense because they are…',a:'The plant\u2019s energy storage for the future',w:['Mostly air','Artificially enriched']},
+   {q:'Garlic\u2019s bite comes largely from…',a:'Sulfur compounds',w:['Pure sugar','Chlorophyll']},
+   {q:'The peanut is unusual because it…',a:'Flowers above ground but fruits below',w:['Grows on tall trees','Is a true root']}]},
+ {t:'Fruit of the Light', mins:4, secs:[
+   {h:'The solar economy',t:'Every fruit is condensed sunlight: photosynthesis turning photons, water, and air into sugar, packaged with seeds and painted to advertise. Ripening is a marketing campaign aimed at animals like you — sweetness and color in exchange for seed transport. When a fruit tastes generous, that\u2019s because generosity is the strategy.'},
+   {h:'Color is chemistry',t:'Plant pigments double as protective chemistry, and eating them borrows it: lycopene in red tomatoes, anthocyanins in blueberries and purple cabbage, carotenoids in orange flesh, chlorophyll and lutein in greens. "Eat the rainbow" is the rare slogan that is literally sound biochemistry — each color family brings different phytonutrients.'},
+   {h:'Season and place',t:'Above-ground foods peak with the light that made them: berries and stone fruit in high summer, squashes as light declines, citrus carrying stored sunshine through winter. Eating roughly in season isn\u2019t just romance — it\u2019s eating each plant at its chemical best, and it keeps your plate changing, which keeps you interested. Momentum matters in food, too.'}],
+  quiz:[
+   {q:'A fruit\u2019s sweetness evolved primarily to…',a:'Recruit animals to spread seeds',w:['Poison insects','Store water for winter']},
+   {q:'Anthocyanins give the color of…',a:'Blueberries and purple cabbage',w:['White onions','Brown rice']},
+   {q:'"Eat the rainbow" is sound advice because…',a:'Different pigments carry different phytonutrients',w:['All colors taste identical','Color has no meaning']}]},
+ {t:'The Forager\u2019s Rules', mins:5, secs:[
+   {h:'Rule one is absolute',t:'Never eat a wild plant, berry, or mushroom you have not identified with certainty. Not "pretty sure." Certainty. Deadly species mimic edible ones: wild carrot resembles poison hemlock; death cap mushrooms have killed confident foragers on several continents. There is no shortcut, no rule of thumb ("animals eat it," "it smells fine") that works. All of them have graves attached.'},
+   {h:'How real foragers learn',t:'Safely, foraging is learned like a language: locally, in person, one species at a time, from experienced guides, with region-specific field books — never from a single app photo match, and never from this or any website. Start with the unmistakables of your region, learn each plant\u2019s toxic lookalikes first, and harvest only where you\u2019re certain the land is unsprayed and legal.'},
+   {h:'The survival-test myth',t:'You may meet the "Universal Edibility Test" — the military protocol of skin-testing and micro-tasting unknown plants over hours. Know what it is: a last-resort starvation procedure with real risks, not a hobbyist technique. The adult version of Bible Buddies\u2019 golden rule stands: when in doubt — and doubt should be your default — don\u2019t.'}],
+  quiz:[
+   {q:'The first rule of foraging is…',a:'Never eat what you haven\u2019t identified with certainty',w:['Taste a little first','Trust anything birds eat']},
+   {q:'Poison hemlock is dangerous partly because it resembles…',a:'Wild carrot',w:['Watermelon','Corn']},
+   {q:'The Universal Edibility Test is…',a:'A last-resort survival protocol, not a hobby technique',w:['A fun weekend activity','A guarantee of safety']}]}
+]},
+{emoji:'🌌', color:'#a78bfa', title:'The Night Sky',
+ blurb:'From our solar neighborhood to the life of stars — the scale of everything, in five-minute pieces.',
+ lessons:[
+ {t:'Our Neighborhood', mins:4, secs:[
+   {h:'One star, much furniture',t:'The solar system is one star — the Sun, holding 99.8% of all the mass — plus leftovers: eight planets, dwarf worlds like Pluto, a belt of asteroids, and a vast halo of comets. Everything orbits in nearly the same flat plane, the fossil of the spinning disk of gas and dust it all condensed from 4.6 billion years ago.'},
+   {h:'The scale problem',t:'Scale is the hardest and most rewarding idea in astronomy. If the Sun were a basketball in your living room, Earth would be a peppercorn 26 meters away; Neptune, a marble most of a kilometer out; the nearest other star, another basketball 7,000 kilometers away. Every fact in this path sits on top of that emptiness.'},
+   {h:'The Sun, briefly',t:'The Sun is a middle-aged yellow dwarf fusing 600 million tons of hydrogen into helium every second; the missing mass becomes the light that grows your above-ground plants and sets your circadian clock. It has burned for 4.6 billion years and has roughly five billion to go — a comfortably long subscription.'}],
+  quiz:[
+   {q:'What fraction of the solar system\u2019s mass is the Sun?',a:'About 99.8%',w:['About half','About 10%']},
+   {q:'The planets orbit in nearly one plane because…',a:'They formed from a spinning disk',w:['Gravity is flat','They were arranged later']},
+   {q:'The Sun shines by…',a:'Fusing hydrogen into helium',w:['Burning coal','Reflecting Jupiter']}]},
+ {t:'The Moon & Its Moods', mins:4, secs:[
+   {h:'Phases are geometry',t:'The Moon makes no light; it reflects the Sun\u2019s, and its phases are simply the angle we watch from. New moon: it sits sunward, dark face to us. Full moon: opposite the Sun, fully lit. The whole cycle takes 29.5 days — the original month, the first calendar humanity ever kept.'},
+   {h:'Tides and a slowing dance',t:'The Moon\u2019s gravity stretches Earth\u2019s oceans into two bulges — two high tides a day. That same tug is slowly transferring energy: the Moon retreats about 3.8 centimeters a year, and Earth\u2019s days lengthen imperceptibly. The dance you see tonight is measurably different from the one the dinosaurs saw.'},
+   {h:'Eclipses, the great coincidence',t:'The Sun is 400 times wider than the Moon and, by pure coincidence, about 400 times farther away — so they appear the same size in our sky. That accident gives Earth total solar eclipses, the only place in the solar system with the trick performed this perfectly. Catch one; nothing on a screen prepares you.'}],
+  quiz:[
+   {q:'A full moon occurs when the Moon is…',a:'Opposite the Sun from Earth',w:['Between Earth and Sun','Closest to Earth']},
+   {q:'The Moon is currently…',a:'Slowly drifting away from Earth',w:['Spiraling into Earth','Fixed in place']},
+   {q:'Total solar eclipses look perfect from Earth because…',a:'Sun and Moon appear the same size by coincidence',w:['The Moon glows','The Sun shrinks']}]},
+ {t:'Wanderers', mins:5, secs:[
+   {h:'The rocky four',t:'"Planet" comes from the Greek for wanderer — the lights that moved against the fixed stars. The inner four are rock: Mercury, a scorched iron cannonball; Venus, Earth\u2019s twin gone wrong under a runaway greenhouse hot enough to melt lead; Earth, the anomaly with liquid water and a bodyguard moon; Mars, the rusted desert with the solar system\u2019s tallest volcano and our next footprints.'},
+   {h:'The giant four',t:'Beyond the asteroid belt, worlds change species. Jupiter, heavier than all other planets combined, a storm three Earths wide raging for centuries. Saturn, density lighter than water, wearing rings of ice shards. Uranus, rolling on its side. Neptune, supersonic winds at the edge of dark. Between them, dozens of moons that are worlds themselves — icy Europa hiding an ocean.'},
+   {h:'How to actually see them',t:'You\u2019ve seen planets without knowing: they\u2019re the "stars" that don\u2019t twinkle, shining with steady light because they\u2019re disks, not points. Venus is the blazing evening or morning "star"; Jupiter outshines everything else at night; Mars is unmistakably amber. A free sky-map app and one clear evening will hand you three planets before bedtime.'}],
+  quiz:[
+   {q:'"Planet" originally meant…',a:'Wanderer',w:['Fire','Circle']},
+   {q:'The hottest planetary surface belongs to…',a:'Venus',w:['Mercury','Mars']},
+   {q:'Planets differ from stars in the night sky because they…',a:'Shine steadily instead of twinkling',w:['Are always red','Only appear in winter']}]},
+ {t:'Starlight Stories', mins:5, secs:[
+   {h:'The life of a star',t:'Stars are born in collapsing clouds of gas, ignite fusion, and spend millions to trillions of years — smaller burns longer — in stable adulthood. Endings depend on mass: sun-like stars swell into red giants and exhale their outer layers, leaving a white dwarf ember; the heaviest detonate as supernovae, forging and scattering every element heavier than iron. Your blood\u2019s iron is supernova ash.'},
+   {h:'Light is a time machine',t:'A light-year is distance — how far light travels in a year — which makes every telescope a time machine. Tonight\u2019s Sirius is 8.6 years old news; the Andromeda galaxy, visible to your naked eye from a dark site, is light that left 2.5 million years ago, before our species existed. Looking up is always looking back.'},
+   {h:'Our galaxy, our address',t:'The Milky Way — that band of haze across a truly dark sky — is our own galaxy seen edge-on from inside: a few hundred billion stars, our Sun orbiting the center once every 230 million years. Beyond it, hundreds of billions of galaxies more. Crown-chakra language and astrophysics agree on exactly one practice: go somewhere dark, look up, and let the border of "you" get thin.'}],
+  quiz:[
+   {q:'Elements heavier than iron are forged mainly in…',a:'Supernova explosions',w:['Ocean vents','Planet cores']},
+   {q:'A light-year measures…',a:'Distance',w:['Time','Brightness']},
+   {q:'The Sun orbits the galactic center about once every…',a:'230 million years',w:['365 days','12 years']}]}
+]}
+];
+const ARENA_EXTRA=[
+ {q:'The chakra associated with the throat is…',a:'Vishuddha',w:['Muladhara','Manipura']},
+ {q:'Which is a yin arm meridian?',a:'Heart',w:['Bladder','Stomach']},
+ {q:'Lycopene is the signature pigment of…',a:'Tomatoes',w:['Blueberries','Spinach']},
+ {q:'Saturn is famous for being…',a:'Less dense than water',w:['The hottest planet','A rocky world']},
+ {q:'In the organ clock, the Lung channel peaks…',a:'3–5 am',w:['Noon','7–9 pm']},
+ {q:'Green space exposure has been shown to…',a:'Lower stress markers',w:['Raise blood pressure','Erase memories']},
+ {q:'The root chakra\u2019s element is…',a:'Earth',w:['Fire','Ether']},
+ {q:'Death cap is a deadly…',a:'Mushroom',w:['Berry','Root']},
+ {q:'The Moon\u2019s full cycle of phases takes about…',a:'29.5 days',w:['7 days','365 days']},
+ {q:'Which color family is linked to trust and calm?',a:'Blue',w:['Red','Orange']}
+];
+const STUDIO=[
+ {name:'Box Breath', desc:'4·4·4·4 — the steady square. Focus and reset.', cycles:4,
+  pattern:[['Breathe in',4],['Hold',4],['Breathe out',4],['Hold',4]]},
+ {name:'4·7·8 Wind-Down', desc:'Long exhales for evenings and lights-out.', cycles:4,
+  pattern:[['Breathe in',4],['Hold',7],['Breathe out',8]]},
+ {name:'Coherent 5·5', desc:'Five in, five out — the heart-rhythm classic.', cycles:6,
+  pattern:[['Breathe in',5],['Breathe out',5]]}
+];
+const LIBRARY=null;
+/* DATA_END */
+/* ENGINE_START */
+const $=id=>document.getElementById(id);
+const LKEY=SITE.key;
+let S=Object.assign({xp:0,done:{},last:null,streak:0,lastDay:null,best:0,sound:true},
+  (()=>{try{return JSON.parse(localStorage.getItem(LKEY))||{}}catch(e){return{}}})());
+let mem=null;
+function save(){ mem=S; try{localStorage.setItem(LKEY,JSON.stringify(S));}catch(e){} }
+
+/* ---- streak ---- */
+function dayStr(d){ return d.toISOString().slice(0,10); }
+function touchStreak(){
+  const today=dayStr(new Date());
+  if(S.lastDay===today) return;
+  const y=new Date(); y.setDate(y.getDate()-1);
+  S.streak = (S.lastDay===dayStr(y)) ? S.streak+1 : 1;
+  S.lastDay=today; save(); chips();
+}
+
+/* ---- xp & levels ---- */
+function levelOf(xp){ let t=SITE.levels[0][1]; for(const [n,name] of SITE.levels){ if(xp>=n) t=name; } return t; }
+function nextLevelAt(xp){ for(const [n] of SITE.levels){ if(xp<n) return n; } return null; }
+function addXp(n){ S.xp+=n; save(); chips(); }
+function chips(){
+  $('streakChip').innerHTML='🔥 <b>'+S.streak+'</b><span class="sub">day streak</span>';
+  $('xpChip').innerHTML='✦ <b>'+S.xp+'</b><span class="sub">'+levelOf(S.xp)+'</span>';
+}
+
+/* ---- sound (subtle) ---- */
+let AC=null; const ac=()=>{ if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}} return AC; };
+function tone(f,d,dl=0,v=.06,type='sine'){ if(!S.sound)return; const c=ac(); if(!c)return;
+  const o=c.createOscillator(),g=c.createGain(); o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);
+  const t=c.currentTime+dl; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  o.start(t);o.stop(t+d+.05); }
+const sfx={ tick(){tone(660,.06)}, yes(){tone(523,.09);tone(784,.12,.09)}, no(){tone(196,.16,0,.05,'triangle')},
+  win(){[523,659,784,1047].forEach((f,i)=>tone(f,.12,i*.08,.07))}, combo(n){tone(660+n*110,.1,0,.07)} };
+$('sndBtn').addEventListener('click',()=>{S.sound=!S.sound;save();$('sndBtn').textContent=S.sound?'🔊':'🔇';});
+$('sndBtn').textContent=S.sound?'🔊':'🔇';
+
+/* ---- listen (TTS) ---- */
+let pv=null;
+function pickV(){ if(!('speechSynthesis' in window))return; const vs=speechSynthesis.getVoices();
+  const en=vs.filter(v=>/^en/i.test(v.lang));
+  pv=en.find(v=>v.localService)||en[0]||vs[0]; }
+if('speechSynthesis' in window){ pickV(); speechSynthesis.onvoiceschanged=pickV; }
+function speak(t,btn){
+  if(!('speechSynthesis' in window)) return;
+  if(speechSynthesis.speaking){ speechSynthesis.cancel(); if(btn)btn.textContent='▷ Listen'; return; }
+  const u=new SpeechSynthesisUtterance(t); if(pv)u.voice=pv; u.rate=1.0;
+  if(btn){ btn.textContent='■ Stop'; u.onend=()=>btn.textContent='▷ Listen'; }
+  speechSynthesis.speak(u);
+}
+
+/* ---- router ---- */
+function show(id){ if('speechSynthesis' in window) speechSynthesis.cancel();
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  $(id).classList.add('on'); window.scrollTo({top:0}); }
+$('logo').addEventListener('click',()=>{home();});
+
+/* ---- progress helpers ---- */
+const lKey=(p,l)=>p+'-'+l;
+function pathDone(p){ return PATHS[p].lessons.filter((_,l)=>S.done[lKey(p,l)]).length; }
+function totalDone(){ return Object.keys(S.done).length; }
+function totalLessons(){ return PATHS.reduce((s,p)=>s+p.lessons.length,0); }
+function nextUp(){
+  if(S.last){ const [p,l]=S.last; if(!S.done[lKey(p,l)]) return [p,l]; }
+  for(let p=0;p<PATHS.length;p++) for(let l=0;l<PATHS[p].lessons.length;l++) if(!S.done[lKey(p,l)]) return [p,l];
+  return null;
+}
+
+/* ---- HOME ---- */
+function home(){
+  const nu=nextUp();
+  const doneAll=totalDone(), tot=totalLessons();
+  const nla=nextLevelAt(S.xp);
+  let h=`<div class="glass hero">
+    <span class="tag">${SITE.heroKicker}</span>
+    <h1>${SITE.heroTitle}</h1>
+    <p>${SITE.heroSub}</p>
+    <div class="heroRow">`;
+  if(nu){
+    const [p,l]=nu; const L=PATHS[p].lessons[l];
+    h+=`<button class="btn big" onclick="openLesson(${p},${l})">${doneAll? 'Continue':'Begin'}: ${L.t} →</button>
+        <span style="color:var(--dim);font-size:14px">${PATHS[p].emoji} ${PATHS[p].title} · ${L.mins} min</span>`;
+  } else {
+    h+=`<button class="btn big" onclick="openArena()">All ${tot} lessons complete — enter ${SITE.arenaName} →</button>`;
+  }
+  h+=`</div></div>`;
+
+  h+=`<div class="sectionTitle">Paths</div><div class="grid">`;
+  PATHS.forEach((P,p)=>{
+    const d=pathDone(p), n=P.lessons.length, pct=Math.round(d/n*100);
+    h+=`<div class="glass hover pathcard" onclick="openPath(${p})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span class="pemoji">${P.emoji}</span>
+        <span class="ring" style="--p:${pct};--rc:${P.color}"><i>${pct}%</i></span>
+      </div>
+      <h3>${P.title}</h3><p>${P.blurb}</p>
+      <div class="meta">${n} lessons · ${d} done</div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  h+=`<div class="sectionTitle">Keep the streak alive</div><div class="rowcards">
+    <div class="glass hover featurecard" onclick="openArena()">
+      <span class="pemoji">⚔️</span><h3>${SITE.arenaName}</h3><p>${SITE.arenaDesc}</p>
+      <div class="meta" style="margin-top:12px">Best combo: ×${S.best||1}</div>
+    </div>`;
+  if(typeof STUDIO!=='undefined'&&STUDIO) h+=`
+    <div class="glass hover featurecard" onclick="openStudio()">
+      <span class="pemoji">🫁</span><h3>${SITE.studioName}</h3><p>${SITE.studioDesc}</p></div>`;
+  if(typeof LIBRARY!=='undefined'&&LIBRARY) h+=`
+    <div class="glass hover featurecard" onclick="openLibrary()">
+      <span class="pemoji">🏛️</span><h3>${SITE.libraryName}</h3><p>${SITE.libraryDesc}</p></div>`;
+  h+=`</div>`;
+  if(nla) h+=`<p style="color:var(--faint);font-size:13.5px;margin-top:26px">✦ ${nla-S.xp} XP to <b style="color:var(--dim)">${SITE.levels.find(x=>x[0]===nla)[1]}</b></p>`;
+  $('v-home').innerHTML=h;
+  show('v-home'); chips();
+}
+
+/* ---- PATH ---- */
+function openPath(p){
+  const P=PATHS[p]; const nu=nextUp();
+  let h=`<button class="back" onclick="home()">← Home</button>
+  <div class="pathhead"><span class="pemoji">${P.emoji}</span>
+    <div><h2>${P.title}</h2><p>${P.blurb}</p></div></div>`;
+  P.lessons.forEach((L,l)=>{
+    const done=!!S.done[lKey(p,l)];
+    const isNext=nu&&nu[0]===p&&nu[1]===l;
+    h+=`<div class="glass hover lessonrow ${done?'done':''}" onclick="openLesson(${p},${l})">
+      <span class="num">${done?'✓':l+1}</span>
+      <div><h4>${L.t}${isNext?'<span class="nextpill">Up next</span>':''}</h4>
+      <div class="lmeta">${L.secs.length} parts · ${L.quiz.length} questions · ${L.mins} min</div></div>
+      <span class="go">→</span></div>`;
+  });
+  $('v-path').innerHTML=h; show('v-path');
+}
+
+/* ---- LESSON (stepper + quiz) ---- */
+let cur={p:0,l:0,step:0,correct:0};
+function openLesson(p,l){
+  cur={p,l,step:0,correct:0};
+  S.last=[p,l]; save();
+  renderStep();
+  show('v-lesson');
+}
+function renderStep(){
+  const P=PATHS[cur.p], L=P.lessons[cur.l];
+  const nSecs=L.secs.length, nQ=L.quiz.length, total=nSecs+nQ;
+  const pct=Math.round(cur.step/total*100);
+  let h=`<div class="lessonwrap">
+    <button class="back" onclick="openPath(${cur.p})">← ${P.title}</button>
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <h2 style="font-size:clamp(22px,3.6vw,30px)">${L.t}</h2>
+      <span style="color:var(--faint);font-size:13px">${Math.min(cur.step+1,total)} / ${total}</span></div>
+    <div class="progressbar"><i style="width:${pct}%"></i></div>`;
+
+  if(cur.step<nSecs){
+    const sec=L.secs[cur.step];
+    h+=`<div class="glass seccard">
+      <span class="tag" style="border-color:${P.color}55;color:${P.color}">Part ${cur.step+1}</span>
+      <h3 style="margin-top:12px">${sec.h}</h3><p>${sec.t}</p>
+      <div class="secfoot">
+        <button class="btn" onclick="stepNext()">${cur.step<nSecs-1?'Continue →':'To the questions →'}</button>
+        <button class="listen" id="listenBtn">▷ Listen</button>
+      </div></div>`;
+  } else {
+    const qi=cur.step-nSecs, Q=L.quiz[qi];
+    const opts=[Q.a,...Q.w].sort(()=>Math.random()-.5);
+    h+=`<div class="glass seccard">
+      <span class="tag" style="border-color:${P.color}55;color:${P.color}">Question ${qi+1} of ${nQ}</span>
+      <h3 style="margin-top:12px;font-family:Inter;font-weight:600;font-size:20px">${Q.q}</h3>
+      <div style="margin-top:16px" id="qbox">`;
+    opts.forEach(o=>{ h+=`<button class="qopt" onclick="answer(this,${JSON.stringify(o===Q.a)})">${o}</button>`; });
+    h+=`</div><div class="qfeed" id="qfeed"></div></div>`;
+  }
+  h+=`</div>`;
+  $('v-lesson').innerHTML=h;
+  const lb=$('listenBtn');
+  if(lb){ const sec=L.secs[cur.step]; lb.onclick=()=>speak(sec.h+'. '+sec.t,lb); }
+  window.scrollTo({top:0});
+}
+function stepNext(){ sfx.tick(); cur.step++; renderStep(); }
+function answer(btn,ok){
+  const box=$('qbox');
+  if(box.dataset.locked) return;
+  if(ok){
+    box.dataset.locked=1; btn.classList.add('right'); sfx.yes(); cur.correct++;
+    $('qfeed').style.color='var(--a1)'; $('qfeed').textContent='Correct ✦';
+    setTimeout(()=>{ cur.step++;
+      const L=PATHS[cur.p].lessons[cur.l];
+      if(cur.step>=L.secs.length+L.quiz.length) finishLesson(); else renderStep();
+    },700);
+  } else {
+    btn.classList.add('wrong'); btn.disabled=true; sfx.no();
+    $('qfeed').style.color='var(--a3)'; $('qfeed').textContent='Not quite — try again.';
+  }
+}
+function finishLesson(){
+  const P=PATHS[cur.p], L=P.lessons[cur.l];
+  const first=!S.done[lKey(cur.p,cur.l)];
+  const xp=(first?30:8)+cur.correct*(first?15:4);
+  S.done[lKey(cur.p,cur.l)]=true; touchStreak(); addXp(xp); save();
+  const nu=nextUp();
+  $('doneEmoji').textContent=P.emoji;
+  $('doneTitle').textContent='Lesson complete';
+  $('doneSub').textContent=L.t+' · '+cur.correct+'/'+L.quiz.length+' correct'+(first?'':' · review');
+  $('doneXp').textContent='+'+xp+' XP · '+levelOf(S.xp);
+  if(nu){ const NL=PATHS[nu[0]].lessons[nu[1]];
+    $('nextTease').innerHTML='Up next: <b>'+NL.t+'</b> · '+PATHS[nu[0]].emoji+' '+PATHS[nu[0]].title+' · '+NL.mins+' min';
+    $('doneNext').textContent='Keep going →';
+    $('doneNext').onclick=()=>{ $('done').classList.remove('on'); openLesson(nu[0],nu[1]); };
+  } else {
+    $('nextTease').innerHTML='Every lesson complete. <b>'+SITE.arenaName+'</b> awaits.';
+    $('doneNext').textContent='Enter '+SITE.arenaName+' →';
+    $('doneNext').onclick=()=>{ $('done').classList.remove('on'); openArena(); };
+  }
+  $('doneHome').onclick=()=>{ $('done').classList.remove('on'); home(); };
+  $('done').classList.add('on'); sfx.win();
+}
+
+/* ---- ARENA ---- */
+let A={qs:[],i:0,score:0,combo:0,best:0,xp:0};
+function arenaBank(){
+  const bank=[...ARENA_EXTRA];
+  PATHS.forEach(P=>P.lessons.forEach(L=>L.quiz.forEach(q=>bank.push(q))));
+  return bank;
+}
+function openArena(){
+  const bank=arenaBank().sort(()=>Math.random()-.5).slice(0,10);
+  A={qs:bank,i:0,score:0,combo:0,best:0,xp:0};
+  renderArenaQ();
+  show('v-arena');
+}
+function mult(){ return A.combo>=6?3:A.combo>=3?2:1; }
+function renderArenaQ(){
+  if(A.i>=A.qs.length) return arenaEnd();
+  const Q=A.qs[A.i];
+  const opts=[Q.a,...Q.w].sort(()=>Math.random()-.5);
+  let h=`<button class="back" onclick="home()">← Home</button>
+  <div class="arenatop">
+    <span class="tag">Question ${A.i+1} / ${A.qs.length}</span>
+    <span class="tag">Score ${A.score}</span>
+    <span class="spacer"></span>
+    <span class="combo ${A.combo>=3?'hot':''}">×${mult()} combo</span>
+  </div>
+  <div class="glass arenaq"><h3>${Q.q}</h3><div style="margin-top:16px" id="abox">`;
+  opts.forEach(o=>{ h+=`<button class="qopt" onclick="arenaAnswer(this,${JSON.stringify(o===Q.a)})">${o}</button>`; });
+  h+=`</div><div class="qfeed" id="afeed"></div></div>`;
+  $('v-arena').innerHTML=h;
+}
+function arenaAnswer(btn,ok){
+  const box=$('abox'); if(box.dataset.locked) return; box.dataset.locked=1;
+  if(ok){
+    btn.classList.add('right');
+    A.combo++; A.best=Math.max(A.best,mult());
+    const gain=10*mult(); A.score++; A.xp+=gain;
+    sfx.combo(Math.min(A.combo,6));
+    $('afeed').style.color='var(--a1)'; $('afeed').textContent='+'+gain+' XP';
+  } else {
+    btn.classList.add('wrong'); A.combo=0; sfx.no();
+    $('afeed').style.color='var(--a3)'; $('afeed').textContent='Combo reset';
+  }
+  setTimeout(()=>{A.i++;renderArenaQ();},650);
+}
+function arenaEnd(){
+  touchStreak(); addXp(A.xp);
+  if(A.best>(S.best||0)){ S.best=A.best; save(); }
+  $('v-arena').innerHTML=`<div class="glass" style="max-width:480px;margin:8vh auto;padding:40px;text-align:center">
+    <div style="font-size:50px">⚔️</div>
+    <h2 style="font-size:28px;margin:10px 0 4px">${A.score} / ${A.qs.length}</h2>
+    <p style="color:var(--dim);margin:0 0 6px">Best combo ×${A.best} · +${A.xp} XP</p>
+    <p style="color:var(--faint);font-size:13.5px;margin:0 0 22px">${A.score>=9?'Untouchable.':A.score>=7?'Sharp. One more run?':'The bank remembers. Run it back.'}</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn big" onclick="openArena()">Run it back →</button>
+      <button class="btn ghost" onclick="home()">Home</button>
+    </div></div>`;
+  sfx.win(); chips();
+}
+
+/* ---- STUDIO (breathwork) ---- */
+let BT=null;
+function openStudio(){
+  if(typeof STUDIO==='undefined'||!STUDIO) return home();
+  let h=`<button class="back" onclick="stopBreath();home()">← Home</button>
+  <div class="pathhead"><span class="pemoji">🫁</span>
+   <div><h2>${SITE.studioName}</h2><p>${SITE.studioDesc}</p></div></div>
+  <div class="studioopts">`;
+  STUDIO.forEach((st,i)=>{ h+=`<div class="glass hover featurecard" onclick="startBreath(${i})">
+    <h3>${st.name}</h3><p>${st.desc}</p><div class="meta" style="margin-top:10px">${st.cycles} rounds</div></div>`; });
+  h+=`</div><div class="breathwrap" id="bwrap"></div>`;
+  $('v-studio').innerHTML=h; show('v-studio');
+}
+function stopBreath(){ if(BT){clearTimeout(BT);BT=null;} if('speechSynthesis' in window) speechSynthesis.cancel(); }
+function startBreath(i){
+  stopBreath();
+  const st=STUDIO[i];
+  $('bwrap').innerHTML=`<div id="bcircle">Ready…</div>
+    <p style="color:var(--dim);margin-top:22px" id="bstatus">${st.name} · round 1 of ${st.cycles}</p>
+    <button class="btn ghost" onclick="stopBreath();document.getElementById('bcircle').textContent='Paused';">Stop</button>`;
+  $('bwrap').scrollIntoView({behavior:'smooth'});
+  let round=0, phase=0;
+  function step(){
+    const c=$('bcircle'); if(!c) return;
+    if(phase>=st.pattern.length){ phase=0; round++;
+      if(round>=st.cycles){ c.className=''; c.style.setProperty('--dur','1s'); c.textContent='Complete ✦';
+        $('bstatus').textContent='Well done. +6 XP'; touchStreak(); addXp(6); sfx.win(); return; }
+      $('bstatus').textContent=st.name+' · round '+(round+1)+' of '+st.cycles;
+    }
+    const [label,secs]=st.pattern[phase];
+    c.style.setProperty('--dur',secs+'s');
+    c.className = /in/i.test(label)?'in':/out/i.test(label)?'out':'hold';
+    c.textContent=label+' · '+secs;
+    sfx.tick();
+    phase++;
+    BT=setTimeout(step, secs*1000);
+  }
+  BT=setTimeout(step,900);
+}
+
+/* ---- LIBRARY (only when data present) ---- */
+function openLibrary(){
+  if(typeof LIBRARY==='undefined'||!LIBRARY) return home();
+  let h=`<button class="back" onclick="home()">← Home</button>
+  <div class="pathhead"><span class="pemoji">🏛️</span>
+   <div><h2>${SITE.libraryName}</h2><p>${SITE.libraryDesc}</p></div></div>`;
+  LIBRARY.forEach((sh,si)=>{
+    h+=`<div class="sectionTitle" style="color:${sh.color}">${sh.emoji} ${sh.name} · ${sh.books.length}</div><div class="grid">`;
+    sh.books.forEach(b=>{
+      h+=`<div class="glass hover pathcard" style="cursor:default">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0;font-size:18px">${b[0]}</h3>
+          <span class="tag" style="border-color:${sh.color}55;color:${sh.color}">${b[1]}</span></div>
+        <p style="min-height:0;margin:10px 0 8px">${b[2]}</p>
+        <div class="meta">${b[3]}</div></div>`;
+    });
+    h+=`</div>`;
+  });
+  $('v-library').innerHTML=h; show('v-library');
+}
+
+/* ---- boot ---- */
+$('vtag').textContent=SITE.vtag;
+chips();
+home();
+/* ENGINE_END */
+</script>
+</body>
+</html>
