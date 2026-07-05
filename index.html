@@ -138,10 +138,23 @@ header{display:flex;align-items:center;gap:12px;padding:6px 0 22px}
 #bcircle.out{transform:scale(1)}
 .studioopts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;width:100%}
 
+#bnav{display:none}
+@media(max-width:720px){
+  body{padding-bottom:70px}
+  #bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--panel);border-top:1px solid var(--line);backdrop-filter:blur(10px)}
+  #bnav button{flex:1;background:none;border:none;color:var(--faint);font-family:inherit;font-size:10.5px;font-weight:600;padding:9px 2px calc(9px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:3px;align-items:center;cursor:pointer}
+  #bnav button .bi{font-size:20px;line-height:1}
+  #bnav button.on{color:var(--a1)}
+}
 footer{margin-top:60px;text-align:center;color:var(--faint);font-size:13px}
 footer a{color:var(--dim)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<script>
+/* Analytics — paste a GA4 Measurement ID (G-XXXXXXX) to enable; leave "" for none */
+const GA_ID="";
+if(GA_ID){const s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config',GA_ID);}
+</script>
 </head>
 <body>
 <div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div>
@@ -162,7 +175,7 @@ footer a{color:var(--dim)}
   <div class="view" id="v-studio"></div>
   <div class="view" id="v-library"></div>
 
-  <footer>Lumen · a Boundless learning studio · <span id="vtag">v1.0</span><br>
+  <footer>Lumen · a Boundless learning studio · <span id="vtag">v1.1</span><br>
   Explores traditional systems (chakras, meridians, plant energetics) alongside modern science — offered for reflection and learning, not as medical advice.</footer>
 </div>
 
@@ -182,7 +195,7 @@ footer a{color:var(--dim)}
 /* ============ LUMEN — adult learning engine (shared with The 89) ============ */
 /* DATA_START */
 const SITE={
-  key:'lumen.v1', name:'Lumen', vtag:'v1.0',
+  key:'lumen.v1', name:'Lumen', vtag:'v1.1',
   heroKicker:'Tonight\u2019s session awaits',
   heroTitle:'Small lessons. Big glow.',
   heroSub:'Five-minute lessons on the chakra system, the language of color, meridians, plant energetics, and the night sky — with streaks, XP, and a quiz arena that\u2019s hard to put down.',
@@ -191,7 +204,7 @@ const SITE={
   studioName:'The Studio', studioDesc:'Guided breathwork sessions to reset between lessons.'
 };
 const PATHS=[
-{emoji:'🧘', color:'#f472b6', title:'The Chakra System',
+{emoji:'🧘', color:'#f472b6', title:'The Chakra System', refs:[['Chakras — the deep history','https://en.wikipedia.org/wiki/Chakra'],['The subtle body in world traditions','https://en.wikipedia.org/wiki/Subtle_body']],
  blurb:'The seven-center energy map of yogic tradition — history, anatomy of the subtle body, and practice.',
  lessons:[
  {t:'The Energy Map', mins:4, secs:[
@@ -227,7 +240,7 @@ const PATHS=[
    {q:'Ajna is associated with…',a:'Insight and discernment',w:['Appetite','Muscular strength']},
    {q:'The 7-breath scan moves…',a:'From the base of the spine to the crown',w:['From the hands inward','From the crown downward']}]}
 ]},
-{emoji:'🎨', color:'#fbbf24', title:'The Language of Color',
+{emoji:'🎨', color:'#fbbf24', title:'The Language of Color', refs:[['Color psychology — the research','https://en.wikipedia.org/wiki/Color_psychology'],['Color symbolism across cultures','https://en.wikipedia.org/wiki/Color_symbolism']],
  blurb:'Why color moves us — perception, psychology, culture, and how to use color deliberately.',
  lessons:[
  {t:'Why Color Moves Us', mins:4, secs:[
@@ -263,7 +276,7 @@ const PATHS=[
    {q:'The chakra ladder and color psychology both run…',a:'From arousal (red) toward contemplation (violet)',w:['From violet to red','In no particular order']},
    {q:'The palette exercise works through…',a:'Small, visible, daily repetition',w:['One-time exposure','Avoiding the color entirely']}]}
 ]},
-{emoji:'🌊', color:'#38bdf8', title:'Meridians & Energy',
+{emoji:'🌊', color:'#38bdf8', title:'Meridians & Energy', refs:[['Meridians in Chinese medicine','https://en.wikipedia.org/wiki/Meridian_(Chinese_medicine)'],['NIH: acupuncture, what the evidence says','https://www.nccih.nih.gov/health/acupuncture-effectiveness-and-safety']],
  blurb:'The twelve rivers of Chinese medicine — qi, the organ clock, acupressure, and honest discernment.',
  lessons:[
  {t:'Rivers of Qi', mins:4, secs:[
@@ -299,7 +312,7 @@ const PATHS=[
    {q:'"A map can be useful without being a photograph" means…',a:'Frameworks can help even if not literally true',w:['All maps are false','Photographs are useless']},
    {q:'Persistent or severe symptoms call for…',a:'A qualified clinician',w:['Only more acupressure','Ignoring them']}]}
 ]},
-{emoji:'🌱', color:'#4ade80', title:'Plants: Sun & Earth',
+{emoji:'🌱', color:'#4ade80', title:'Plants: Sun & Earth', refs:[['How photosynthesis works','https://en.wikipedia.org/wiki/Photosynthesis'],['Root vegetables — the full list','https://en.wikipedia.org/wiki/Root_vegetable'],['Foraging — history & safety','https://en.wikipedia.org/wiki/Foraging']],
  blurb:'Above-ground and below-ground foods — energetics, nutrition science, and the forager\u2019s honest rules.',
  lessons:[
  {t:'Two Kingdoms of the Garden', mins:4, secs:[
@@ -335,7 +348,7 @@ const PATHS=[
    {q:'Poison hemlock is dangerous partly because it resembles…',a:'Wild carrot',w:['Watermelon','Corn']},
    {q:'The Universal Edibility Test is…',a:'A last-resort survival protocol, not a hobby technique',w:['A fun weekend activity','A guarantee of safety']}]}
 ]},
-{emoji:'🌌', color:'#a78bfa', title:'The Night Sky',
+{emoji:'🌌', color:'#a78bfa', title:'The Night Sky', refs:[['NASA Science — start exploring','https://science.nasa.gov/'],['The life cycle of stars','https://en.wikipedia.org/wiki/Stellar_evolution']],
  blurb:'From our solar neighborhood to the life of stars — the scale of everything, in five-minute pieces.',
  lessons:[
  {t:'Our Neighborhood', mins:4, secs:[
@@ -558,6 +571,7 @@ function renderStep(){
       <div class="secfoot">
         <button class="btn" onclick="stepNext()">${cur.step<nSecs-1?'Continue →':'To the questions →'}</button>
         <button class="listen" id="listenBtn">▷ Listen</button>
+        <button class="listen" id="moreBtn">✚ Learn more</button>
       </div></div>`;
   } else {
     const qi=cur.step-nSecs, Q=L.quiz[qi];
@@ -573,6 +587,8 @@ function renderStep(){
   $('v-lesson').innerHTML=h;
   const lb=$('listenBtn');
   if(lb){ const sec=L.secs[cur.step]; lb.onclick=()=>speak(sec.h+'. '+sec.t,lb); }
+  const mb=$('moreBtn');
+  if(mb){ const sec=L.secs[cur.step]; mb.onclick=()=>openMore(P,sec); }
   window.scrollTo({top:0});
 }
 function stepNext(){ sfx.tick(); cur.step++; renderStep(); }
@@ -733,6 +749,33 @@ function openLibrary(){
   });
   $('v-library').innerHTML=h; show('v-library');
 }
+
+function openMore(P,sec){
+  const wiki='https://en.wikipedia.org/wiki/Special:Search?search='+encodeURIComponent(sec.h);
+  const refs=(P.refs||[]).map(r=>'<a href="'+r[1]+'" target="_blank" rel="noopener" style="display:block;padding:10px 0;border-top:1px solid var(--line);font-weight:600;font-size:14px;text-decoration:none">'+r[0]+' ↗</a>').join('');
+  openModal('Go deeper: '+sec.h,
+    '<p>'+sec.t+'</p>'+
+    '<p style="margin-top:12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700">Keep pulling the thread</p>'+
+    '<a href="'+wiki+'" target="_blank" rel="noopener" style="display:block;padding:10px 0;border-top:1px solid var(--line);font-weight:600;font-size:14px;text-decoration:none">🔎 Search “'+sec.h+'” on Wikipedia ↗</a>'+refs+
+    '<p style="margin-top:12px;font-size:12.5px">Links open in a new tab — your lesson will be right here waiting.</p>');
+}
+
+/* ---- mobile bottom nav ---- */
+(function(){
+  const items=[['🏠','Home',()=>home(),'v-home']];
+  items.push(['⚔️',SITE.arenaName.split(' ')[0],()=>openArena(),'v-arena']);
+  if(typeof STUDIO!=='undefined'&&STUDIO)items.push(['🫁','Studio',()=>openStudio(),'v-studio']);
+  if(typeof LIBRARY!=='undefined'&&LIBRARY)items.push(['🏛','Library',()=>openLibrary(),'v-library']);
+  items.push(['⚙','Settings',()=>$('setBtn').click(),null]);
+  const nav=document.createElement('nav');nav.id='bnav';
+  nav.innerHTML=items.map((it,i)=>'<button data-v="'+(it[3]||'')+'"><span class="bi">'+it[0]+'</span>'+it[1]+'</button>').join('');
+  document.body.appendChild(nav);
+  nav.querySelectorAll('button').forEach((b,i)=>b.onclick=items[i][2]);
+})();
+const _show=show;
+show=function(id){ _show(id);
+  document.querySelectorAll('#bnav button').forEach(b=>b.classList.toggle('on',b.dataset.v===id||(id==='v-path'||id==='v-lesson')&&b.dataset.v==='v-home'));
+};
 
 /* ---- boot ---- */
 $('vtag').textContent=SITE.vtag;
