@@ -40,8 +40,9 @@ header{display:flex;align-items:center;gap:12px;padding:6px 0 22px}
 .chip{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;backdrop-filter:blur(10px);white-space:nowrap}
 .chip b{color:var(--ink)}
 .chip .sub{color:var(--dim);font-weight:500}
-#sndBtn{background:var(--card);border:1px solid var(--line);border-radius:999px;width:38px;height:38px;color:var(--dim);font-size:16px;transition:.2s}
-#sndBtn:hover{color:var(--ink);border-color:rgba(255,255,255,.25)}
+#sndBtn,#setBtn{background:var(--card);border:1px solid var(--line);border-radius:999px;width:38px;height:38px;color:var(--dim);font-size:16px;transition:.2s;flex:none}
+#sndBtn:hover,#setBtn:hover{color:var(--ink);border-color:rgba(255,255,255,.25)}
+#xpChip{cursor:pointer}
 
 .view{display:none;animation:fadeup .45s ease}
 .view.on{display:block}
@@ -148,6 +149,97 @@ header{display:flex;align-items:center;gap:12px;padding:6px 0 22px}
 }
 footer{margin-top:60px;text-align:center;color:var(--faint);font-size:13px}
 footer a{color:var(--dim)}
+
+/* ---- generic modal ---- */
+#modal{position:fixed;inset:0;z-index:80;display:none;place-items:center;background:rgba(6,8,16,.78);backdrop-filter:blur(6px);padding:20px}
+#modal.on{display:grid}
+#modalCard{max-width:520px;width:100%;max-height:86vh;overflow-y:auto;padding:26px 26px 24px;animation:fadeup .35s ease}
+#modalCard h2{font-size:23px;margin:0 0 4px}
+#modalCard .mbody{color:#c9d0e0;font-size:15.5px}
+#modalCard .mbody p{margin:0 0 10px}
+#modalClose{position:sticky;top:0;float:right;background:none;border:none;color:var(--dim);font-size:24px;line-height:1;cursor:pointer;margin:-6px -6px 0 0}
+#modalClose:hover{color:var(--ink)}
+
+/* ---- rank ladder ---- */
+.rankrow{display:flex;align-items:center;gap:14px;padding:13px 0;border-top:1px solid var(--line)}
+.rankrow:first-of-type{border-top:none}
+.rankrow .rdot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 10px currentColor}
+.rankrow.cur{background:rgba(255,255,255,.04);border-radius:12px;padding:13px 12px;border:1px solid var(--line)}
+.rankrow h4{font-family:Fraunces,serif;font-size:17px;margin:0}
+.rankrow .rrange{font-size:12.5px;color:var(--faint);font-family:Inter}
+.rankrow p{margin:2px 0 0;font-size:13.5px;color:var(--dim)}
+.rankrow .youare{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#0a0d18;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:999px;padding:3px 10px;align-self:flex-start}
+
+/* ---- big xp ring ---- */
+.xpring{--p:0;width:130px;height:130px;border-radius:50%;margin:6px auto 4px;background:conic-gradient(var(--a1) calc(var(--p)*1%),rgba(255,255,255,.08) 0);display:grid;place-items:center}
+.xpring i{width:106px;height:106px;border-radius:50%;background:#12162a;display:grid;place-items:center;flex-direction:column;font-style:normal;text-align:center}
+.xpring .pctnum{font-family:Fraunces,serif;font-size:26px;font-weight:700;line-height:1}
+.xpring .pctsub{font-size:11px;color:var(--dim);margin-top:2px}
+
+/* ---- home: next-rank bar ---- */
+.rankbar{margin-top:26px;cursor:pointer;padding:14px 16px}
+.rankbar .rbtop{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--dim);margin-bottom:8px}
+.rankbar .rbtop b{color:var(--ink);font-family:Fraunces,serif}
+.rankbar .rbtrack{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.rankbar .rbtrack i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:99px;transition:width .6s cubic-bezier(.22,1,.36,1)}
+
+/* ---- tonight (live) card ---- */
+.tonight{padding:20px 22px;margin-bottom:22px}
+.tonight .tgrid{display:flex;gap:22px;flex-wrap:wrap;align-items:center}
+.tonight .tmoon{font-size:40px;line-height:1}
+.tonight .tcol{display:flex;flex-direction:column;gap:2px}
+.tonight .tk{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.tonight .tv{font-size:15.5px;color:var(--ink);font-weight:600}
+.tonight .tsub{color:var(--dim);font-size:13px}
+.tonight .locbtn{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--dim);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600}
+.tonight .locbtn:hover{color:var(--ink);border-color:rgba(255,255,255,.3)}
+
+/* ---- recommended ---- */
+.recwrap{padding:20px 22px;margin-bottom:8px;border:1px solid var(--line)}
+.recwrap .rtag{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--a1);font-weight:700}
+.recwrap h3{font-size:20px;margin:6px 0 4px}
+.recwrap p.rwhy{color:var(--dim);font-size:14px;margin:0 0 14px}
+.recchips{display:flex;gap:8px;flex-wrap:wrap}
+.recchip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:600;cursor:pointer}
+.recchip:hover{border-color:rgba(255,255,255,.3)}
+
+/* ---- cover (first run) ---- */
+#cover{position:fixed;inset:0;z-index:90;display:none;overflow-y:auto;background:radial-gradient(120% 90% at 50% -10%,rgba(139,92,246,.28),transparent 60%),var(--bg)}
+#cover.on{display:block}
+.coverInner{max-width:640px;margin:0 auto;padding:min(12vh,90px) 24px 60px;text-align:center;animation:fadeup .5s ease}
+.coverLogo{font-family:Fraunces,serif;font-size:40px;font-weight:700;letter-spacing:.5px;background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.coverInner h1{font-size:clamp(26px,5vw,38px);margin:18px 0 10px}
+.coverInner .lede{color:var(--dim);font-size:16.5px;max-width:52ch;margin:0 auto 30px}
+.coverInner .qlabel{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:14px}
+.goalgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;text-align:left}
+.goalcard{padding:18px 16px;cursor:pointer}
+.goalcard .ge{font-size:26px}
+.goalcard h4{font-family:Fraunces,serif;font-size:17px;margin:8px 0 3px}
+.goalcard p{color:var(--dim);font-size:13px;margin:0}
+.coverSkip{margin-top:22px;background:none;border:none;color:var(--faint);font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline}
+.coverSkip:hover{color:var(--dim)}
+
+/* ---- settings rows ---- */
+.setrow{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.setrow:first-child{border-top:none}
+.setrow .sinfo{flex:1}
+.setrow .sinfo b{display:block;font-size:15px}
+.setrow .sinfo span{font-size:13px;color:var(--dim)}
+.toggle{width:48px;height:28px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.06);position:relative;cursor:pointer;flex:none;transition:.2s}
+.toggle.on{background:linear-gradient(90deg,var(--a1),var(--a2));border-color:transparent}
+.toggle i{position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.toggle.on i{left:22px}
+.minibtn{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 14px;font-size:13.5px;font-weight:600}
+.minibtn:hover{border-color:rgba(255,255,255,.3)}
+.minibtn.danger{color:var(--a3)}
+.goalpick{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.goalpick button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--dim);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.goalpick button.sel{color:#0a0d18;background:linear-gradient(90deg,var(--a1),var(--a2));border-color:transparent}
+
+/* colorized color-words (Language of Color path) */
+.cw{font-weight:700}
+.cw.chip{padding:0 5px;border-radius:4px}
+
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <script>
@@ -166,6 +258,7 @@ if(GA_ID){const s=document.createElement('script');s.async=true;s.src='https://w
     <div class="chip" id="streakChip">🔥 <b>0</b><span class="sub">day streak</span></div>
     <div class="chip" id="xpChip">✦ <b>0</b><span class="sub">Spark</span></div>
     <button id="sndBtn" title="Sound">🔊</button>
+    <button id="setBtn" title="Settings" onclick="openSettings()">⚙</button>
   </header>
 
   <div class="view on" id="v-home"></div>
@@ -175,7 +268,7 @@ if(GA_ID){const s=document.createElement('script');s.async=true;s.src='https://w
   <div class="view" id="v-studio"></div>
   <div class="view" id="v-library"></div>
 
-  <footer>Lumen · a Boundless learning studio · <span id="vtag">v1.4</span> · © 2026 Boundless / Mallory Bailey-Finkley — all rights reserved<br>
+  <footer>Lumen · a Boundless learning studio · <span id="vtag">v1.5</span> · © 2026 Boundless / Mallory Bailey-Finkley — all rights reserved<br>
   Explores traditional systems (chakras, meridians, plant energetics) alongside modern science — offered for reflection and learning, not as medical advice.</footer>
 </div>
 
@@ -191,11 +284,26 @@ if(GA_ID){const s=document.createElement('script');s.async=true;s.src='https://w
   </div>
 </div></div>
 
+<div id="modal"><div id="modalCard" class="glass">
+  <button id="modalClose" onclick="closeModal()" aria-label="Close">×</button>
+  <h2 id="modalTitle"></h2>
+  <div class="mbody" id="modalBody"></div>
+</div></div>
+
+<div id="cover"><div class="coverInner">
+  <div class="coverLogo">Lumen</div>
+  <h1>Small lessons. Big glow.</h1>
+  <p class="lede">Five-minute lessons on the chakra system, color, meridians, plant energetics, and the night sky — with streaks, XP, and a quiz arena that's hard to put down.</p>
+  <div class="qlabel">What draws you in tonight?</div>
+  <div class="goalgrid" id="goalGrid"></div>
+  <button class="coverSkip" onclick="skipCover()">Just let me explore everything →</button>
+</div></div>
+
 <script>
 /* ============ LUMEN — adult learning engine (shared with The 89) ============ */
 /* DATA_START */
 const SITE={
-  key:'lumen.v1', name:'Lumen', vtag:'v1.1',
+  key:'lumen.v1', name:'Lumen', vtag:'v1.5',
   heroKicker:'Tonight\u2019s session awaits',
   heroTitle:'Small lessons. Big glow.',
   heroSub:'Five-minute lessons on the chakra system, the language of color, meridians, plant energetics, and the night sky — with streaks, XP, and a quiz arena that\u2019s hard to put down.',
@@ -410,7 +518,7 @@ const LIBRARY=null;
 /* ENGINE_START */
 const $=id=>document.getElementById(id);
 const LKEY=SITE.key;
-let S=Object.assign({xp:0,done:{},last:null,streak:0,lastDay:null,best:0,sound:true},
+let S=Object.assign({xp:0,done:{},last:null,streak:0,lastDay:null,best:0,sound:true,goal:null,lat:null,lon:null,locLabel:null,coverSeen:false},
   (()=>{try{return JSON.parse(localStorage.getItem(LKEY))||{}}catch(e){return{}}})());
 let mem=null;
 function save(){ mem=S; try{localStorage.setItem(LKEY,JSON.stringify(S));}catch(e){} }
@@ -436,13 +544,39 @@ function chips(){
 
 /* ---- sound (subtle) ---- */
 let AC=null; const ac=()=>{ if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}} return AC; };
+
+/* ---- iOS audio unlock ----
+   On iPhone, Web Audio starts in the muted "ambient" session and stays silent
+   until a media element has played from a user gesture. This plays a tiny silent
+   clip on the first tap to flip the session to "playback", then resumes contexts.
+   Exposed as window.__unlockAudio so the music button can call it too. */
+(function(){
+  let ua=null, done=false;
+  function silentEl(){
+    const a=document.createElement('audio'); a.setAttribute('playsinline',''); a.loop=true; a.preload='auto';
+    const sr=8000, n=Math.floor(sr*0.15), buf=new ArrayBuffer(44+n*2), v=new DataView(buf);
+    const w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+    w(0,'RIFF'); v.setUint32(4,36+n*2,true); w(8,'WAVE'); w(12,'fmt ');
+    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+    v.setUint32(24,sr,true); v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+    w(36,'data'); v.setUint32(40,n*2,true);
+    try{ a.src=URL.createObjectURL(new Blob([buf],{type:'audio/wav'})); }catch(e){}
+    return a;
+  }
+  window.__unlockAudio=function(){
+    try{ if(!ua){ ua=silentEl(); ua.style.display='none'; document.body.appendChild(ua); } ua.play().catch(()=>{}); }catch(e){}
+    try{ const c=ac(); if(c&&c.state==='suspended') c.resume(); }catch(e){}
+    done=true;
+  };
+  ['pointerdown','touchend','click'].forEach(ev=>document.addEventListener(ev,()=>window.__unlockAudio(),{passive:true}));
+})();
 function tone(f,d,dl=0,v=.06,type='sine'){ if(!S.sound)return; const c=ac(); if(!c)return;
   const o=c.createOscillator(),g=c.createGain(); o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);
   const t=c.currentTime+dl; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d);
   o.start(t);o.stop(t+d+.05); }
 const sfx={ tick(){tone(660,.06)}, yes(){tone(523,.09);tone(784,.12,.09)}, no(){tone(196,.16,0,.05,'triangle')},
   win(){[523,659,784,1047].forEach((f,i)=>tone(f,.12,i*.08,.07))}, combo(n){tone(660+n*110,.1,0,.07)} };
-$('sndBtn').addEventListener('click',()=>{S.sound=!S.sound;save();$('sndBtn').textContent=S.sound?'🔊':'🔇';});
+$('sndBtn').addEventListener('click',()=>{S.sound=!S.sound;save();$('sndBtn').textContent=S.sound?'🔊':'🔇';if(window.__unlockAudio)window.__unlockAudio();});
 $('sndBtn').textContent=S.sound?'🔊':'🔇';
 
 /* ---- listen (TTS) ---- */
@@ -495,6 +629,9 @@ function home(){
   }
   h+=`</div></div>`;
 
+  h+=`<div class="glass tonight" id="tonightCard"><span class="tsub">Reading the sky…</span></div>`;
+  h+=recommendedHTML();
+
   h+=`<div class="sectionTitle">Paths</div><div class="grid">`;
   PATHS.forEach((P,p)=>{
     const d=pathDone(p), n=P.lessons.length, pct=Math.round(d/n*100);
@@ -521,9 +658,22 @@ function home(){
     <div class="glass hover featurecard" onclick="openLibrary()">
       <span class="pemoji">🏛️</span><h3>${SITE.libraryName}</h3><p>${SITE.libraryDesc}</p></div>`;
   h+=`</div>`;
-  if(nla) h+=`<p style="color:var(--faint);font-size:13.5px;margin-top:26px">✦ ${nla-S.xp} XP to <b style="color:var(--dim)">${SITE.levels.find(x=>x[0]===nla)[1]}</b></p>`;
+  h+=rankBarHTML();
   $('v-home').innerHTML=h;
   show('v-home'); chips();
+  renderTonight();
+}
+
+/* ---- next-rank progress bar (home) ---- */
+function rankBarHTML(){
+  const cur=levelOf(S.xp), nla=nextLevelAt(S.xp);
+  if(nla===null) return `<div class="glass rankbar" onclick="openRanks()"><div class="rbtop"><span>✦ Rank <b>${cur}</b></span><span>highest rank reached</span></div><div class="rbtrack"><i style="width:100%"></i></div></div>`;
+  const ct=(SITE.levels.filter(x=>x[0]<=S.xp).pop()||[0])[0];
+  const nextName=SITE.levels.find(x=>x[0]===nla)[1];
+  const pct=Math.round((S.xp-ct)/(nla-ct)*100);
+  return `<div class="glass rankbar" onclick="openRanks()">
+    <div class="rbtop"><span>✦ Rank <b>${cur}</b></span><span><b style="color:var(--dim)">${nla-S.xp} XP</b> to ${nextName} →</span></div>
+    <div class="rbtrack"><i style="width:${pct}%"></i></div></div>`;
 }
 
 /* ---- PATH ---- */
@@ -565,9 +715,12 @@ function renderStep(){
 
   if(cur.step<nSecs){
     const sec=L.secs[cur.step];
+    const isColorPath = PATHS[cur.p].title==='The Language of Color';
+    const secH = isColorPath ? tintColorWords(sec.h) : sec.h;
+    const secT = isColorPath ? tintColorWords(sec.t) : sec.t;
     h+=`<div class="glass seccard">
       <span class="tag" style="border-color:${P.color}55;color:${P.color}">Part ${cur.step+1}</span>
-      <h3 style="margin-top:12px">${sec.h}</h3><p>${sec.t}</p>
+      <h3 style="margin-top:12px">${secH}</h3><p>${secT}</p>
       <div class="secfoot">
         <button class="btn" onclick="stepNext()">${cur.step<nSecs-1?'Continue →':'To the questions →'}</button>
         <button class="listen" id="listenBtn">▷ Listen</button>
@@ -764,10 +917,10 @@ function openMore(P,sec){
 /* ---- mobile bottom nav ---- */
 (function(){
   const items=[['🏠','Home',()=>home(),'v-home']];
-  items.push(['⚔️',SITE.arenaName.split(' ')[0],()=>openArena(),'v-arena']);
+  items.push(['⚔️',SITE.arenaName.replace(/^The\s+/i,''),()=>openArena(),'v-arena']);
   if(typeof STUDIO!=='undefined'&&STUDIO)items.push(['🫁','Studio',()=>openStudio(),'v-studio']);
   if(typeof LIBRARY!=='undefined'&&LIBRARY)items.push(['🏛','Library',()=>openLibrary(),'v-library']);
-  items.push(['⚙','Settings',()=>$('setBtn').click(),null]);
+  items.push(['⚙','Settings',()=>openSettings(),null]);
   const nav=document.createElement('nav');nav.id='bnav';
   nav.innerHTML=items.map((it,i)=>'<button data-v="'+(it[3]||'')+'"><span class="bi">'+it[0]+'</span>'+it[1]+'</button>').join('');
   document.body.appendChild(nav);
@@ -778,10 +931,215 @@ show=function(id){ _show(id);
   document.querySelectorAll('#bnav button').forEach(b=>b.classList.toggle('on',b.dataset.v===id||(id==='v-path'||id==='v-lesson')&&b.dataset.v==='v-home'));
 };
 
+/* ============================================================
+   v1.5 additions — ranks, goals, settings, cover, live "tonight"
+   ============================================================ */
+
+/* rank descriptions (names come from SITE.levels) */
+const RANK_DESC={
+  'Spark':'The first flicker. Every light begins here.',
+  'Ember':'A steady, glowing warmth — the fire has caught.',
+  'Glow':'Light you can see by. Knowledge starting to radiate.',
+  'Radiant':'Warmth others can feel — you\u2019re lit from within.',
+  'Luminous':'Bright and clear, a dependable source of light.',
+  'Aurora':'Rare and moving — luminous across the whole sky.',
+  'Boundless':'Light without edges. The namesake tier.'
+};
+
+/* goal -> recommended paths (indices into PATHS) */
+const GOALS=[
+  {id:'calm',   emoji:'🌿', label:'Calm my mind',         why:'breath, pressure points, and the heart center',   paths:[2,0], studio:true},
+  {id:'energy', emoji:'🧘', label:'Understand my energy',  why:'the chakra map and the meridian rivers',           paths:[0,2]},
+  {id:'sky',    emoji:'🌌', label:'Explore the night sky', why:'from our solar neighborhood to the life of stars', paths:[4]},
+  {id:'color',  emoji:'🎨', label:'Work with color',       why:'how color shapes feeling, culture, and space',     paths:[1]},
+  {id:'nature', emoji:'🌱', label:'Live closer to nature', why:'plant energetics, nutrition, and foraging sense',  paths:[3]},
+  {id:'all',    emoji:'✦',  label:'A bit of everything',   why:'the full studio — start anywhere',                 paths:[0,1,2,3,4]}
+];
+const goalById=id=>GOALS.find(g=>g.id===id);
+
+/* ---- color-word tinting (Language of Color) ---- */
+const COLOR_HEX={red:'#ff5a5a',orange:'#ffa63d',yellow:'#ffd93d',gold:'#e9c46a',green:'#5be08a',blue:'#5aa8ff',indigo:'#8f9bff',violet:'#c08bff',purple:'#c08bff',pink:'#ff8fc7',teal:'#3fd6b0',white:'#ffffff',black:'#111111'};
+const COLOR_RE=new RegExp('\\b('+Object.keys(COLOR_HEX).join('|')+')\\b','gi');
+function tintColorWords(str){
+  return str.replace(COLOR_RE,(m)=>{
+    const k=m.toLowerCase();
+    if(k==='black') return '<span class="cw chip" style="background:#fff;color:#111">'+m+'</span>';
+    if(k==='white') return '<span class="cw chip" style="background:rgba(255,255,255,.14);color:#fff">'+m+'</span>';
+    return '<span class="cw" style="color:'+COLOR_HEX[k]+'">'+m+'</span>';
+  });
+}
+
+/* ---- generic modal ---- */
+function openModal(title, html){ $('modalTitle').textContent=title; $('modalBody').innerHTML=html; $('modal').classList.add('on'); }
+function closeModal(){ $('modal').classList.remove('on'); }
+$('modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+
+/* ---- ranks modal (ring + ladder + descriptions) ---- */
+function openRanks(){
+  const cur=levelOf(S.xp), nla=nextLevelAt(S.xp);
+  const ct=(SITE.levels.filter(x=>x[0]<=S.xp).pop()||[0])[0];
+  const pct=nla===null?100:Math.round((S.xp-ct)/(nla-ct)*100);
+  const nextName=nla===null?null:SITE.levels.find(x=>x[0]===nla)[1];
+  const dot=['#8aa1a8','#ff9d5c','#ffd93d','#5be08a','#5aa8ff','#c08bff','#3fd6b0'];
+  let ring=`<div class="xpring" style="--p:${pct}"><i>
+      <span class="pctnum">${pct}%</span>
+      <span class="pctsub">${nla===null?'max rank':(nla-S.xp)+' XP to '+nextName}</span></i></div>
+    <p style="text-align:center;color:var(--dim);font-size:14px;margin:0 0 16px">You are <b style="color:var(--ink);font-family:Fraunces,serif">${cur}</b> · ✦ ${S.xp} XP</p>`;
+  let rows='';
+  SITE.levels.forEach((lv,i)=>{
+    const [min,name]=lv, max=(SITE.levels[i+1]?SITE.levels[i+1][0]-1:null), isCur=(name===cur);
+    rows+=`<div class="rankrow ${isCur?'cur':''}">
+      <span class="rdot" style="color:${dot[i]||'#8aa1a8'}"></span>
+      <div style="flex:1"><h4>${name}</h4><div class="rrange">${min}${max!==null?'–'+max:'+'} XP</div>
+      <p>${RANK_DESC[name]||''}</p></div>
+      ${isCur?'<span class="youare">you</span>':''}</div>`;
+  });
+  openModal('Ranks', ring+rows);
+}
+
+/* ---- recommended block (home) ---- */
+function recommendedHTML(){
+  if(!S.goal) return '';
+  const g=goalById(S.goal); if(!g) return '';
+  const pchips=g.paths.map(pi=>`<span class="recchip" onclick="openPath(${pi})">${PATHS[pi].emoji} ${PATHS[pi].title}</span>`).join('');
+  const studioChip=(g.studio&&typeof STUDIO!=='undefined'&&STUDIO)?`<span class="recchip" onclick="openStudio()">🫁 ${SITE.studioName}</span>`:'';
+  return `<div class="glass recwrap">
+    <div class="rtag">Recommended for you</div>
+    <h3>${g.emoji} ${g.label}</h3>
+    <p class="rwhy">Because you're here for ${g.why}. Start with these — change your focus anytime in ⚙ Settings.</p>
+    <div class="recchips">${pchips}${studioChip}</div></div>`;
+}
+
+/* ---- settings modal ---- */
+function openSettings(){
+  const goalBtns=GOALS.map(x=>`<button class="${S.goal===x.id?'sel':''}" onclick="setGoal('${x.id}')">${x.emoji} ${x.label}</button>`).join('');
+  const loc=S.lat!=null?(S.locLabel||('📍 '+S.lat.toFixed(2)+', '+S.lon.toFixed(2))):'not set';
+  const html=`
+    <div class="setrow">
+      <div class="sinfo"><b>Sound effects</b><span>Chimes and quiz feedback</span></div>
+      <div class="toggle ${S.sound?'on':''}" id="setSound" onclick="toggleSoundSetting()"><i></i></div>
+    </div>
+    <div class="setrow" style="flex-direction:column;align-items:stretch">
+      <div class="sinfo"><b>Your focus</b><span>Shapes what Lumen recommends on the home screen</span></div>
+      <div class="goalpick">${goalBtns}</div>
+    </div>
+    <div class="setrow">
+      <div class="sinfo"><b>Location</b><span>For tonight's sunset &amp; sky · ${loc}</span></div>
+      <button class="minibtn" onclick="useMyLocation(true)">Use my location</button>
+    </div>
+    <div class="setrow">
+      <div class="sinfo"><b>Replay the intro</b><span>See the welcome &amp; goal picker again</span></div>
+      <button class="minibtn" onclick="closeModal();replayCover()">Show intro</button>
+    </div>
+    <div class="setrow">
+      <div class="sinfo"><b>Reset progress</b><span>Clears XP, streak &amp; completed lessons on this device</span></div>
+      <button class="minibtn danger" onclick="resetProgress()">Reset</button>
+    </div>
+    <p style="color:var(--faint);font-size:12px;margin:16px 0 0;text-align:center">Lumen ${SITE.vtag} · progress saved on this device</p>`;
+  openModal('Settings', html);
+}
+function toggleSoundSetting(){ S.sound=!S.sound; save(); $('sndBtn').textContent=S.sound?'🔊':'🔇'; const t=$('setSound'); if(t)t.classList.toggle('on',S.sound); if(window.__unlockAudio)window.__unlockAudio(); }
+function setGoal(id){ S.goal=id; save(); const box=document.querySelector('.goalpick'); if(box) box.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('sel',GOALS[i].id===id)); if($('v-home').classList.contains('on')) home(); }
+function resetProgress(){
+  openModal('Reset progress?', `<p>This clears your XP, streak, and completed lessons on this device. It can\u2019t be undone.</p>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn" onclick="doReset()">Yes, reset</button>
+      <button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+}
+function doReset(){
+  S={xp:0,done:{},last:null,streak:0,lastDay:null,best:0,sound:S.sound,goal:S.goal,lat:S.lat,lon:S.lon,locLabel:S.locLabel,coverSeen:true};
+  save(); closeModal(); chips(); home();
+}
+function replayCover(){ S.coverSeen=false; save(); showCover(); }
+
+/* ---- first-run cover (goal picker) ---- */
+function buildCover(){
+  $('goalGrid').innerHTML=GOALS.map(g=>`<div class="glass hover goalcard" onclick="pickGoal('${g.id}')">
+    <div class="ge">${g.emoji}</div><h4>${g.label}</h4><p>${g.why}</p></div>`).join('');
+}
+function showCover(){ buildCover(); $('cover').classList.add('on'); window.scrollTo({top:0}); }
+function hideCover(){ $('cover').classList.remove('on'); }
+function pickGoal(id){ S.goal=id; S.coverSeen=true; save(); hideCover(); home(); }
+function skipCover(){ S.coverSeen=true; save(); hideCover(); home(); }
+
+/* ---- live "tonight": moon (no network) · sun (no network) · sky (open-meteo) ---- */
+function moonPhase(){
+  const SYN=29.530588853, ref=Date.UTC(2000,0,6,18,14,0);
+  let age=((Date.now()-ref)/86400000)%SYN; if(age<0)age+=SYN;
+  const frac=age/SYN, illum=Math.round((1-Math.cos(2*Math.PI*frac))*50);
+  const names=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
+  const em=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+  const i=Math.round(frac*8)%8; return {name:names[i],emoji:em[i],illum};
+}
+function sunTimes(lat,lon){
+  const rad=Math.PI/180,deg=180/Math.PI,now=new Date();
+  const y=now.getUTCFullYear(),m=now.getUTCMonth()+1,d=now.getUTCDate();
+  const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
+  const JDN=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
+  const n=JDN-2451545.0+0.0008,Js=n-lon/360;
+  const M=(357.5291+0.98560028*Js)%360,Mr=M*rad;
+  const C=1.9148*Math.sin(Mr)+0.0200*Math.sin(2*Mr)+0.0003*Math.sin(3*Mr);
+  const lr=((M+C+180+102.9372)%360)*rad;
+  const Jt=2451545.0+Js+0.0053*Math.sin(Mr)-0.0069*Math.sin(2*lr);
+  const dec=Math.asin(Math.sin(lr)*Math.sin(23.4397*rad));
+  const cH=(Math.sin(-0.833*rad)-Math.sin(lat*rad)*Math.sin(dec))/(Math.cos(lat*rad)*Math.cos(dec));
+  if(cH>1||cH<-1) return null;
+  const H=Math.acos(cH)*deg, toD=J=>new Date((J-2440587.5)*86400000);
+  return {rise:toD(Jt-H/360),set:toD(Jt+H/360)};
+}
+function fmtTime(dt){ try{return dt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});}catch(e){return '';} }
+function renderTonight(){
+  const el=$('tonightCard'); if(!el) return;
+  const mp=moonPhase();
+  let html=`<div class="tgrid">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="tmoon">${mp.emoji}</span>
+      <div class="tcol"><span class="tk">Tonight's moon</span><span class="tv">${mp.name}</span><span class="tsub">${mp.illum}% illuminated</span></div>
+    </div>`;
+  if(S.lat!=null){
+    const st=sunTimes(S.lat,S.lon);
+    if(st){
+      const golden=new Date(st.set.getTime()-60*60000);
+      html+=`<div class="tcol"><span class="tk">Sun</span><span class="tv">↑ ${fmtTime(st.rise)} · ↓ ${fmtTime(st.set)}</span><span class="tsub">golden hour ~${fmtTime(golden)} · a fine time to breathe</span></div>`;
+    }
+    html+=`<div class="tcol" id="tconds"><span class="tk">Sky</span><span class="tsub">checking conditions…</span></div>`;
+  } else {
+    html+=`<div class="tcol"><span class="tsub">The moon looks the same everywhere — add your location for tonight's sunset, golden hour, and sky.</span>
+      <button class="locbtn" style="margin-top:8px" onclick="useMyLocation(true)">📍 Use my location</button></div>`;
+  }
+  html+=`</div>`;
+  el.innerHTML=html;
+  if(S.lat!=null) fetchConditions();
+}
+function fetchConditions(){
+  const t=$('tconds'); if(!t) return;
+  const wx=`https://api.open-meteo.com/v1/forecast?latitude=${S.lat}&longitude=${S.lon}&current=temperature_2m,cloud_cover&timezone=auto`;
+  const aq=`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${S.lat}&longitude=${S.lon}&current=us_aqi`;
+  Promise.allSettled([fetch(wx).then(r=>r.json()),fetch(aq).then(r=>r.json())]).then(([w,a])=>{
+    let temp='',cloud=null,aqi=null;
+    if(w.status==='fulfilled'&&w.value.current){ temp=Math.round(w.value.current.temperature_2m)+'°'; cloud=w.value.current.cloud_cover; }
+    if(a.status==='fulfilled'&&a.value.current){ aqi=a.value.current.us_aqi; }
+    const sg=cloud==null?'':cloud<25?'clear — great for stargazing':cloud<60?'partly clear':'cloudy tonight';
+    if(temp||cloud!=null){
+      t.innerHTML=`<span class="tk">Sky now</span><span class="tv">${temp}${cloud!=null?' · '+cloud+'% cloud':''}</span><span class="tsub">${sg}${aqi!=null?' · air '+aqi+' AQI':''}</span>`;
+    } else { t.innerHTML=`<span class="tk">Sky</span><span class="tsub">conditions unavailable right now</span>`; }
+  }).catch(()=>{ t.innerHTML=`<span class="tk">Sky</span><span class="tsub">conditions unavailable in this viewer</span>`; });
+}
+function useMyLocation(){
+  if(!('geolocation' in navigator)){ alert('Location isn\u2019t available on this device.'); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    S.lat=+pos.coords.latitude.toFixed(3); S.lon=+pos.coords.longitude.toFixed(3); S.locLabel=null; save();
+    if($('modal').classList.contains('on')) openSettings();
+    if($('v-home').classList.contains('on')) renderTonight();
+  },()=>{ alert('Couldn\u2019t get your location — everything else still works.'); },{enableHighAccuracy:false,timeout:8000,maximumAge:600000});
+}
+
 /* ---- boot ---- */
 $('vtag').textContent=SITE.vtag;
+$('xpChip').addEventListener('click',openRanks);
 chips();
 home();
+if(!S.coverSeen) showCover();
 /* ENGINE_END */
 
 /* ---- 🎵 chill focus drone (generative, no audio files) ---- */
@@ -795,6 +1153,7 @@ home();
   const n=nodes; nodes=null; setTimeout(()=>{try{n.oscs.forEach(o=>o.stop())}catch(e){}},1400);
   btn.style.opacity=.8; btn.textContent='🎵'; }
  function start(){ try{
+  if(window.__unlockAudio)window.__unlockAudio();
   AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();
   const g=AC.createGain(); g.gain.value=0; g.connect(AC.destination);
   const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=850; f.connect(g);
